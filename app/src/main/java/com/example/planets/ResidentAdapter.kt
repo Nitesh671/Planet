@@ -15,16 +15,13 @@ class ResidentAdapter() : RecyclerView.Adapter<ResidentAdapter.ViewHolder>() {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val name: TextView
-        val nameLabel: TextView
         init {
             //todo
             name = view.findViewById(R.id.name)
-            nameLabel = view.findViewById(R.id.nameLabel)
         }
 
         fun bind(resident: String, position: Int) {
-            nameLabel.text = "Resident $position"
-            name.setVisibility(View.GONE)
+            name.text = "Resident ${position+1}"
             Log.i("Nitesh", "bind: ${position}").toString()
         }
     }
@@ -45,10 +42,8 @@ class ResidentAdapter() : RecyclerView.Adapter<ResidentAdapter.ViewHolder>() {
     override fun getItemCount() = residentList.size
 
     fun updateList(newList: ArrayList<String>) {
-        Log.i("Nitesh7", "bind: ${newList[0]}")
         residentList.clear()
         residentList.addAll(newList)
-        Log.i("Nitesh4", "bind: ${residentList[0]}")
         notifyDataSetChanged()
     }
 

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="20dp"
-    android:background="@color/black">
+    android:background="@color/white">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -20,17 +20,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/HeaderNameTextStyle"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:textAlignment="center"
                 tools:text="Test"/>
 
             <TextView
                 android:id="@+id/header"
                 style="@style/RecyclerViewNameTextStyle"
                 android:textSize="60px"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:text="@string/planet_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,7 +45,8 @@
                 android:id="@+id/details"
                 style="@style/RecyclerViewNameTextStyle"
                 android:textSize="50px"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
+                android:textStyle="normal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/header"
@@ -57,7 +59,7 @@
                 android:id="@+id/resident_header"
                 style="@style/RecyclerViewNameTextStyle"
                 android:textSize="60px"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:text="@string/residents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,8 +72,8 @@
             <TextView
                 android:id="@+id/resident_info"
                 style="@style/RecyclerViewNameTextStyle"
-                android:textSize="20px"
-                android:textColor="@color/white"
+                android:textSize="30px"
+                android:textColor="@color/black"
                 android:text="@string/resident_sub_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

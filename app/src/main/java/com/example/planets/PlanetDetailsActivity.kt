@@ -2,6 +2,7 @@ package com.example.planets
 
 import android.os.Bundle
 import android.text.Html
+import android.view.View
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
@@ -17,6 +18,8 @@ class PlanetDetailsActivity : ComponentActivity() {
 
     private lateinit var name: TextView
     private lateinit var details: TextView
+    private lateinit var residentHeader: TextView
+    private lateinit var residentSubHeader: TextView
 
     private lateinit var residentAdapter: ResidentAdapter
     lateinit var recyclerview: RecyclerView
@@ -29,6 +32,8 @@ class PlanetDetailsActivity : ComponentActivity() {
         details = findViewById(R.id.details)
         recyclerview = findViewById(R.id.rv_resident_list)
         residentAdapter = ResidentAdapter()
+        residentHeader = findViewById(R.id.resident_header)
+        residentSubHeader = findViewById(R.id.resident_info)
 
         var url = getIntent().getStringExtra(PLANET_ID)
         url = url?.substringAfterLast("planets/")
@@ -62,7 +67,16 @@ class PlanetDetailsActivity : ComponentActivity() {
                 details.text =
                     Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
 
-                data?.residents?.let { residentAdapter.updateList(it) }
+                if(data.residents.isNullOrEmpty()) {
+                    recyclerview.visibility = View.GONE
+                    residentHeader.visibility = View.GONE
+                    residentSubHeader.visibility = View.GONE
+                } else {
+                    recyclerview.visibility = View.VISIBLE
+                    residentHeader.visibility = View.VISIBLE
+                    residentSubHeader.visibility = View.VISIBLE
+                    data?.residents?.let { residentAdapter.updateList(it) }
+                }
             }
         }
     }

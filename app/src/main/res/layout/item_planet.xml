@@ -18,19 +18,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/nameLabel"
-            android:text="@string/name"
-            style="@style/RecyclerViewNameTextStyle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/name"
             style="@style/RecyclerViewNameTextStyle"
             android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/nameLabel"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Trial" />
 

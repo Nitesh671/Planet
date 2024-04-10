@@ -4,6 +4,7 @@ import Planet
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
@@ -44,13 +45,17 @@ class MainActivity : ComponentActivity() {
             planetLiveDate.observe(this@MainActivity) { data->
                 if(data.previous.isNullOrEmpty()) {
                     previousButton.setEnabled(false)
+                    previousButton.visibility = View.GONE
                 } else {
                     previousButton.setEnabled(true)
+                    previousButton.visibility = View.VISIBLE
                 }
                 if(data.next.isNullOrEmpty()) {
                     nextButton.setEnabled(false)
+                    nextButton.visibility = View.GONE
                 } else {
                     nextButton.setEnabled(true)
+                    nextButton.visibility = View.VISIBLE
                 }
 
                 nextButton.setOnClickListener{
