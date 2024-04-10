@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 class ResidentAdapter() : RecyclerView.Adapter<ResidentAdapter.ViewHolder>() {
 
     var listener: OnClickListener? = null
-    var residentList: ArrayList<String> = arrayListOf()
+    var list: ArrayList<String> = arrayListOf()
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val name: TextView
@@ -21,7 +21,15 @@ class ResidentAdapter() : RecyclerView.Adapter<ResidentAdapter.ViewHolder>() {
         }
 
         fun bind(resident: String, position: Int) {
-            name.text = "Resident ${position+1}"
+            if(resident.contains("people")) {
+                var id = resident.substringAfterLast("people/")
+                id = id.substring(0, id.length-1)
+                name.text = "Resident ${id}"
+            } else if(resident.contains("films")) {
+                var id = resident.substringAfterLast("films/")
+                id = id.substring(0, id.length-1)
+                name.text = "Film ${id}"
+            }
             Log.i("Nitesh", "bind: ${position}").toString()
         }
     }
@@ -33,17 +41,17 @@ class ResidentAdapter() : RecyclerView.Adapter<ResidentAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.i("Nitesh2", "bind: $position")
-        holder.bind(residentList[position], position)
+        holder.bind(list[position], position)
         holder.itemView.setOnClickListener {
-            listener?.onClick(position, residentList[position])
+            listener?.onClick(position, list[position])
         }
     }
 
-    override fun getItemCount() = residentList.size
+    override fun getItemCount() = list.size
 
     fun updateList(newList: ArrayList<String>) {
-        residentList.clear()
-        residentList.addAll(newList)
+        list.clear()
+        list.addAll(newList)
         notifyDataSetChanged()
     }
 

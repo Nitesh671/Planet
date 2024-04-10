@@ -82,7 +82,6 @@ class MainActivity : ComponentActivity() {
             override fun onClick(position: Int, data: Planet) {
                 Log.i("Nitesh adapter", "$position")
                 val intent = Intent(this@MainActivity, PlanetDetailsActivity::class.java)
-                // Passing the data to the
                 intent.putExtra(PLANET_ID, data.url)
                 startActivity(intent)
             }

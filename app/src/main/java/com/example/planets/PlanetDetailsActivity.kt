@@ -1,7 +1,9 @@
 package com.example.planets
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.activity.ComponentActivity
@@ -20,9 +22,13 @@ class PlanetDetailsActivity : ComponentActivity() {
     private lateinit var details: TextView
     private lateinit var residentHeader: TextView
     private lateinit var residentSubHeader: TextView
+    private lateinit var filmHeader: TextView
+    private lateinit var filmSubHeader: TextView
 
     private lateinit var residentAdapter: ResidentAdapter
-    lateinit var recyclerview: RecyclerView
+    lateinit var rvResident: RecyclerView
+    private lateinit var filmAdapter: ResidentAdapter
+    lateinit var rvFilm: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,16 +36,26 @@ class PlanetDetailsActivity : ComponentActivity() {
         setContentView(R.layout.planet_details_activity)
         name = findViewById(R.id.planetname)
         details = findViewById(R.id.details)
-        recyclerview = findViewById(R.id.rv_resident_list)
+
+        rvResident = findViewById(R.id.rv_resident_list)
         residentAdapter = ResidentAdapter()
         residentHeader = findViewById(R.id.resident_header)
         residentSubHeader = findViewById(R.id.resident_info)
 
+        rvFilm = findViewById(R.id.rv_film_list)
+        filmAdapter = ResidentAdapter()
+        filmHeader = findViewById(R.id.film_header)
+        filmSubHeader = findViewById(R.id.film_info)
+
         var url = getIntent().getStringExtra(PLANET_ID)
         url = url?.substringAfterLast("planets/")
 
-        recyclerview.layoutManager = LinearLayoutManager(this@PlanetDetailsActivity)
-        recyclerview.adapter = residentAdapter
+        rvResident.layoutManager = LinearLayoutManager(this@PlanetDetailsActivity)
+        rvResident.adapter = residentAdapter
+
+        rvFilm.layoutManager = LinearLayoutManager(this@PlanetDetailsActivity)
+        rvFilm.adapter = filmAdapter
+
         if (url != null) {
             planetViewModel.getPlanetData(url)
         }
@@ -48,6 +64,7 @@ class PlanetDetailsActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         observer()
+        clickListener()
     }
 
     fun observer() {
@@ -68,16 +85,54 @@ class PlanetDetailsActivity : ComponentActivity() {
                     Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
 
                 if(data.residents.isNullOrEmpty()) {
-                    recyclerview.visibility = View.GONE
+                    rvResident.visibility = View.GONE
                     residentHeader.visibility = View.GONE
                     residentSubHeader.visibility = View.GONE
                 } else {
-                    recyclerview.visibility = View.VISIBLE
+                    rvResident.visibility = View.VISIBLE
                     residentHeader.visibility = View.VISIBLE
                     residentSubHeader.visibility = View.VISIBLE
                     data?.residents?.let { residentAdapter.updateList(it) }
                 }
+
+                if(data.films.isNullOrEmpty()) {
+                    rvFilm.visibility = View.GONE
+                    filmHeader.visibility = View.GONE
+                    filmSubHeader.visibility = View.GONE
+                } else {
+                    rvFilm.visibility = View.VISIBLE
+                    filmHeader.visibility = View.VISIBLE
+                    filmSubHeader.visibility = View.VISIBLE
+                    data?.films?.let { filmAdapter.updateList(it) }
+                }
             }
         }
+    }
+
+    private fun clickListener() {
+        residentAdapter.setOnClickListener(object :
+            ResidentAdapter.OnClickListener {
+            override fun onClick(position: Int, data: String) {
+                Log.i("Nitesh adapter", "$position")
+                val intent =
+                    Intent(this@PlanetDetailsActivity, ResidentDetailActivity::class.java)
+                intent.putExtra(ID, data)
+                startActivity(intent)
+            }
+        })
+        filmAdapter.setOnClickListener(object :
+            ResidentAdapter.OnClickListener {
+            override fun onClick(position: Int, data: String) {
+                Log.i("Nitesh adapter", "$position")
+                val intent =
+                    Intent(this@PlanetDetailsActivity, FilmDetailActivity::class.java)
+                intent.putExtra(ID, data)
+                startActivity(intent)
+            }
+        })
+    }
+
+    companion object {
+        const val ID = "id"
     }
 }

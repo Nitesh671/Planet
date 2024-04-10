@@ -95,6 +95,46 @@
                 app:layout_constraintStart_toStartOf="parent"
             />
 
+            <TextView
+                android:id="@+id/film_header"
+                style="@style/RecyclerViewNameTextStyle"
+                android:textSize="60px"
+                android:textColor="@color/black"
+                android:text="@string/films"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/rv_resident_list"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="20dp"
+                />
+
+            <TextView
+                android:id="@+id/film_info"
+                style="@style/RecyclerViewNameTextStyle"
+                android:textSize="30px"
+                android:textColor="@color/black"
+                android:text="@string/film_sub_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/film_header"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_film_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="visible"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="4dp"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_planet"
+                app:layout_constraintTop_toBottomOf="@id/film_info"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>

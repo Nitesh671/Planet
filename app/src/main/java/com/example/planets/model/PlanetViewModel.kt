@@ -21,31 +21,57 @@ class PlanetViewModel(application: Application): AndroidViewModel(application = 
     val planetDate: LiveData<Planet>
         get() = _planetData
 
+    private var _residentData: MutableLiveData<Resident> = MutableLiveData()
+    val residentData: LiveData<Resident>
+        get() = _residentData
+
+    private var _filmData: MutableLiveData<Film> = MutableLiveData()
+    val filmData: LiveData<Film>
+        get() = _filmData
+
     private val planetRepository = PlanetRepository()
 
     fun fetchPlanets() {
         GlobalScope.launch(Dispatchers.IO) {
-            val planets = planetRepository.getPlanets()
+            val result = planetRepository.getPlanets()
             withContext(Dispatchers.Main) {
-                _planetLiveData.value = planets
+                _planetLiveData.value = result
             }
         }
     }
 
     fun changePage(url: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            val planets = planetRepository.changePage(url)
+            val result = planetRepository.changePage(url)
             withContext(Dispatchers.Main) {
-                _planetLiveData.value = planets
+                _planetLiveData.value = result
             }
         }
     }
 
     fun getPlanetData(url: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            val planet = planetRepository.getPlanetData(url)
+            val result = planetRepository.getPlanetData(url)
             withContext(Dispatchers.Main) {
-                _planetData.value = planet
+                _planetData.value = result
+            }
+        }
+    }
+
+    fun fetchResident(url: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = planetRepository.getResident(url)
+            withContext(Dispatchers.Main) {
+                _residentData.value = result
+            }
+        }
+    }
+
+    fun fetchFilm(url: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = planetRepository.getFilm(url)
+            withContext(Dispatchers.Main) {
+                _filmData.value = result
             }
         }
     }

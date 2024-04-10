@@ -28,6 +28,16 @@
             android:exported="true"
             android:theme="@style/Theme.Planets">
         </activity>
+        <activity
+            android:name=".ResidentDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Planets">
+        </activity>
+        <activity
+            android:name=".FilmDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Planets">
+        </activity>
     </application>
 
 </manifest>

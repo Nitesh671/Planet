@@ -7,4 +7,7 @@
     <string name="planets">Planets</string>
     <string name="residents">Residents:</string>
     <string name="resident_sub_header">(to see the residents details click ono the tile of the resident)</string>
+    <string name="film_sub_header">(to see the film details click ono the tile of the resident)</string>
+    <string name="films">Films:</string>
+
 </resources>
