@@ -29,6 +29,18 @@ class ResidentAdapter() : RecyclerView.Adapter<ResidentAdapter.ViewHolder>() {
                 var id = resident.substringAfterLast("films/")
                 id = id.substring(0, id.length-1)
                 name.text = "Film ${id}"
+            } else if(resident.contains("species")) {
+                var id = resident.substringAfterLast("species/")
+                id = id.substring(0, id.length-1)
+                name.text = "Species ${id}"
+            } else if(resident.contains("vehicles")) {
+                var id = resident.substringAfterLast("vehicles/")
+                id = id.substring(0, id.length-1)
+                name.text = "Vehicle ${id}"
+            } else if(resident.contains("starships")) {
+                var id = resident.substringAfterLast("starships/")
+                id = id.substring(0, id.length-1)
+                name.text = "Starship ${id}"
             }
             Log.i("Nitesh", "bind: ${position}").toString()
         }

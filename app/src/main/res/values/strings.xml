@@ -8,6 +8,16 @@
     <string name="residents">Residents:</string>
     <string name="resident_sub_header">(to see the residents details click ono the tile of the resident)</string>
     <string name="film_sub_header">(to see the film details click ono the tile of the resident)</string>
+    <string name="species_sub_header">(to see the species details click ono the tile of the resident)</string>
+    <string name="vehicles_sub_header">(to see the vehicle details click ono the tile of the resident)</string>
+    <string name="starships_sub_header">(to see the starship details click ono the tile of the resident)</string>
     <string name="films">Films:</string>
+    <string name="resident_details">Resident Details</string>
+    <string name="species">Species</string>
+    <string name="vehicles">Vehicles</string>
+    <string name="starships">Starships</string>
+    <string name="species_details">Species Details</string>
+    <string name="starship_details">Starship Details</string>
+    <string name="vehicle_details">Vehicle Details</string>
 
 </resources>

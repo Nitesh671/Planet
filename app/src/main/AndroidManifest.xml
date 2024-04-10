@@ -38,6 +38,21 @@
             android:exported="true"
             android:theme="@style/Theme.Planets">
         </activity>
+        <activity
+            android:name=".SpeciesDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Planets">
+        </activity>
+        <activity
+            android:name=".StarshipDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Planets">
+        </activity>
+        <activity
+            android:name=".VehiclesDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Planets">
+        </activity>
     </application>
 
 </manifest>
