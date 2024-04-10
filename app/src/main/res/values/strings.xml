@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Planets</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="name">Name:</string>
+    <string name="planet_details">Planet details:</string>
+    <string name="planets">Planets</string>
+    <string name="residents">Residents:</string>
+    <string name="resident_sub_header">(to see the residents details click ono the tile of the resident)</string>
+</resources>
