@@ -5,6 +5,7 @@ import PlanetResponse
 import RetrofitClient
 import com.example.planets.model.Film
 import com.example.planets.model.Resident
+import com.example.planets.model.Vehicle
 
 class PlanetRepository {
 
@@ -49,6 +50,15 @@ class PlanetRepository {
     suspend fun getFilm(url: String): Film? {
         return try {
             return apiService.getFilm(url)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    suspend fun getVehicle(url: String): Vehicle? {
+        return try {
+            return apiService.getVehicle(url)
         } catch (e: Exception) {
             e.printStackTrace()
             null

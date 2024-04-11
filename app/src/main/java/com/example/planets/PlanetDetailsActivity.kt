@@ -1,5 +1,7 @@
 package com.example.planets
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
@@ -63,7 +65,7 @@ class PlanetDetailsActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         observer()
-        clickListener()
+        onClickListener()
     }
 
     fun observer() {
@@ -108,23 +110,18 @@ class PlanetDetailsActivity : ComponentActivity() {
         }
     }
 
-    private fun clickListener() {
-        residentAdapter.setOnClickListener(object :
+    fun onClickListener() {
+        adapterClickAction(residentAdapter, this@PlanetDetailsActivity, ResidentDetailActivity())
+        adapterClickAction(filmAdapter, this@PlanetDetailsActivity, FilmDetailActivity())
+    }
+
+    fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
+        adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {
                 Log.i("Nitesh adapter", "$position")
                 val intent =
-                    Intent(this@PlanetDetailsActivity, ResidentDetailActivity::class.java)
-                intent.putExtra(ID, data)
-                startActivity(intent)
-            }
-        })
-        filmAdapter.setOnClickListener(object :
-            ResidentAdapter.OnClickListener {
-            override fun onClick(position: Int, data: String) {
-                Log.i("Nitesh adapter", "$position")
-                val intent =
-                    Intent(this@PlanetDetailsActivity, FilmDetailActivity::class.java)
+                    Intent(context, activity::class.java)
                 intent.putExtra(ID, data)
                 startActivity(intent)
             }

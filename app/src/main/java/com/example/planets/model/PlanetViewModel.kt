@@ -29,6 +29,10 @@ class PlanetViewModel(application: Application): AndroidViewModel(application = 
     val filmData: LiveData<Film>
         get() = _filmData
 
+    private var _vehicleData: MutableLiveData<Vehicle> = MutableLiveData()
+    val vehicleData: LiveData<Vehicle>
+        get() = _vehicleData
+
     private val planetRepository = PlanetRepository()
 
     fun fetchPlanets() {
@@ -72,6 +76,15 @@ class PlanetViewModel(application: Application): AndroidViewModel(application = 
             val result = planetRepository.getFilm(url)
             withContext(Dispatchers.Main) {
                 _filmData.value = result
+            }
+        }
+    }
+
+    fun fetchVehicle(url: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = planetRepository.getVehicle(url)
+            withContext(Dispatchers.Main) {
+                _vehicleData.value = result
             }
         }
     }

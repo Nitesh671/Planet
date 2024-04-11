@@ -1,5 +1,7 @@
 package com.example.planets
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
@@ -177,56 +179,20 @@ class FilmDetailActivity: ComponentActivity() {
     }
 
     fun onClickListener() {
-        residentAdapter.setOnClickListener(object :
-            ResidentAdapter.OnClickListener {
-            override fun onClick(position: Int, data: String) {
-                Log.i("Nitesh adapter", "$position")
-                val intent =
-                    Intent(this@FilmDetailActivity, ResidentDetailActivity::class.java)
-                intent.putExtra(ID, data)
-                startActivity(intent)
-            }
-        })
+        adapterClickAction(residentAdapter, this@FilmDetailActivity, ResidentDetailActivity())
+        adapterClickAction(planetAdapter, this@FilmDetailActivity, PlanetDetailsActivity())
+        adapterClickAction(starshipAdapter, this@FilmDetailActivity, StarshipDetailActivity())
+        adapterClickAction(vehiclesAdapter, this@FilmDetailActivity, VehiclesDetailActivity())
+        adapterClickAction(speciesAdapter, this@FilmDetailActivity, SpeciesDetailActivity())
+    }
 
-        planetAdapter.setOnClickListener(object :
+    fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
+        adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {
                 Log.i("Nitesh adapter", "$position")
                 val intent =
-                    Intent(this@FilmDetailActivity, PlanetDetailsActivity::class.java)
-                intent.putExtra(ID, data)
-                startActivity(intent)
-            }
-        })
-
-        starshipAdapter.setOnClickListener(object :
-            ResidentAdapter.OnClickListener {
-            override fun onClick(position: Int, data: String) {
-                Log.i("Nitesh adapter", "$position")
-                val intent =
-                    Intent(this@FilmDetailActivity, StarshipDetailActivity::class.java)
-                intent.putExtra(ID, data)
-                startActivity(intent)
-            }
-        })
-
-        vehiclesAdapter.setOnClickListener(object :
-            ResidentAdapter.OnClickListener {
-            override fun onClick(position: Int, data: String) {
-                Log.i("Nitesh adapter", "$position")
-                val intent =
-                    Intent(this@FilmDetailActivity, VehiclesDetailActivity::class.java)
-                intent.putExtra(ID, data)
-                startActivity(intent)
-            }
-        })
-
-        speciesAdapter.setOnClickListener(object :
-            ResidentAdapter.OnClickListener {
-            override fun onClick(position: Int, data: String) {
-                Log.i("Nitesh adapter", "$position")
-                val intent =
-                    Intent(this@FilmDetailActivity, SpeciesDetailActivity::class.java)
+                    Intent(context, activity::class.java)
                 intent.putExtra(ID, data)
                 startActivity(intent)
             }
