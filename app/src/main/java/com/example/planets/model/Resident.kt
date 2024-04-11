@@ -13,7 +13,7 @@ data class Resident (
     @SerializedName("eye_color") val eyeColor: String,
     @SerializedName("birth_year") val birthYear: String,
     @SerializedName("gender") val gender: String,
-    @SerializedName("homeworld") val homeworld: String,
+    @SerializedName("homeworld") val homeworld: String?,
     @SerializedName("films") val films: ArrayList<String>,
     @SerializedName("species") val species: ArrayList<String>,
     @SerializedName("vehicles") val vehicles: ArrayList<String>,

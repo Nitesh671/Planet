@@ -8,6 +8,7 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +17,7 @@ import com.example.planets.PlanetDetailsActivity.Companion.ID
 import com.example.planets.databinding.ResidentDetailsActivityBinding
 import com.example.planets.model.PlanetViewModel
 
-class ResidentDetailActivity: ComponentActivity() {
+class ResidentDetailActivity : ComponentActivity() {
 
     private lateinit var viewBinding: ResidentDetailsActivityBinding
     private lateinit var residentDetails: TextView
@@ -25,24 +26,24 @@ class ResidentDetailActivity: ComponentActivity() {
     private lateinit var filmHeader: TextView
     private lateinit var filmSubHeader: TextView
     private lateinit var filmAdapter: ResidentAdapter
-    lateinit var rvFilm: RecyclerView
+    private lateinit var rvFilm: RecyclerView
 
     private lateinit var speciesHeader: TextView
     private lateinit var speciesSubHeader: TextView
     private lateinit var speciesAdapter: ResidentAdapter
-    lateinit var rvSpecies: RecyclerView
+    private lateinit var rvSpecies: RecyclerView
 
     private lateinit var vehiclesHeader: TextView
     private lateinit var vehiclesSubHeader: TextView
     private lateinit var vehiclesAdapter: ResidentAdapter
-    lateinit var rvVehicles: RecyclerView
+    private lateinit var rvVehicles: RecyclerView
 
     private lateinit var starshipHeader: TextView
     private lateinit var starshipSubHeader: TextView
     private lateinit var starshipAdapter: ResidentAdapter
-    lateinit var rvStarship: RecyclerView
+    private lateinit var rvStarship: RecyclerView
 
-    var homeworld = ""
+    private var homeworld = ""
 
     private val planetViewModel: PlanetViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,77 +102,82 @@ class ResidentDetailActivity: ComponentActivity() {
 
     private fun observer() {
         planetViewModel.apply {
-            residentData.observe(this@ResidentDetailActivity) {data->
-                val html = "<p>Name: ${data.name}</p>" +
-                        "<p>Height: ${data.height}</p>" +
-                        "<p>Mass: ${data.mass}</p>" +
-                        "<p>Hair Color: ${data.hairColor}</p>" +
-                        "<p>Skin Color: ${data.skinColor}</p>" +
-                        "<p>Eye Color: ${data.eyeColor}</p>" +
-                        "<p>Birth Year: ${data.birthYear}</p>" +
-                        "<p>Gender: ${data.gender}</p>"
+            residentData.observe(this@ResidentDetailActivity) { data ->
+                if (data != null) {
+                    val html = "<p>Name: ${data.name}</p>" +
+                            "<p>Height: ${data.height}</p>" +
+                            "<p>Mass: ${data.mass}</p>" +
+                            "<p>Hair Color: ${data.hairColor}</p>" +
+                            "<p>Skin Color: ${data.skinColor}</p>" +
+                            "<p>Eye Color: ${data.eyeColor}</p>" +
+                            "<p>Birth Year: ${data.birthYear}</p>" +
+                            "<p>Gender: ${data.gender}</p>"
 
-                residentDetails.text = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
+                    residentDetails.text = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
 
-                if(data.homeworld.isNullOrEmpty()) {
-                    residentPlanet.visibility = View.GONE
+                    if (data.homeworld.isNullOrEmpty()) {
+                        residentPlanet.visibility = View.GONE
+                    } else {
+                        homeworld = data.homeworld
+                        var planet = data.homeworld.substringAfterLast("planets/")
+                        planet = planet.substring(0, planet.length - 1)
+                        residentPlanet.text = String.format(getString(R.string.homeworld), planet)
+                        residentPlanet.visibility = View.VISIBLE
+                    }
+
+                    if (data.films.isEmpty()) {
+                        rvFilm.visibility = View.GONE
+                        filmHeader.visibility = View.GONE
+                        filmSubHeader.visibility = View.GONE
+                    } else {
+                        rvFilm.visibility = View.VISIBLE
+                        filmHeader.visibility = View.VISIBLE
+                        filmSubHeader.visibility = View.VISIBLE
+                        filmAdapter.updateList(data.films)
+                    }
+
+                    if (data.species.isEmpty()) {
+                        rvSpecies.visibility = View.GONE
+                        speciesHeader.visibility = View.GONE
+                        speciesSubHeader.visibility = View.GONE
+                    } else {
+                        rvSpecies.visibility = View.VISIBLE
+                        speciesHeader.visibility = View.VISIBLE
+                        speciesSubHeader.visibility = View.VISIBLE
+                        speciesAdapter.updateList(data.species)
+                    }
+
+                    if (data.vehicles.isEmpty()) {
+                        rvVehicles.visibility = View.GONE
+                        vehiclesHeader.visibility = View.GONE
+                        vehiclesSubHeader.visibility = View.GONE
+                    } else {
+                        rvVehicles.visibility = View.VISIBLE
+                        vehiclesHeader.visibility = View.VISIBLE
+                        vehiclesSubHeader.visibility = View.VISIBLE
+                        vehiclesAdapter.updateList(data.vehicles)
+                    }
+
+                    if (data.starships.isEmpty()) {
+                        rvStarship.visibility = View.GONE
+                        starshipHeader.visibility = View.GONE
+                        starshipSubHeader.visibility = View.GONE
+                    } else {
+                        rvStarship.visibility = View.VISIBLE
+                        starshipHeader.visibility = View.VISIBLE
+                        starshipSubHeader.visibility = View.VISIBLE
+                        starshipAdapter.updateList(data.starships)
+                    }
                 } else {
-                    homeworld = data.homeworld
-                    var planet = data.homeworld.substringAfterLast("planets/")
-                    planet = planet.substring(0, planet.length - 1)
-                    residentPlanet.text = "Homeworld: ${planet} (click to see details)"
-                    residentPlanet.visibility = View.VISIBLE
-                }
-
-                if(data.films.isNullOrEmpty()) {
-                    rvFilm.visibility = View.GONE
-                    filmHeader.visibility = View.GONE
-                    filmSubHeader.visibility = View.GONE
-                } else {
-                    rvFilm.visibility = View.VISIBLE
-                    filmHeader.visibility = View.VISIBLE
-                    filmSubHeader.visibility = View.VISIBLE
-                    filmAdapter.updateList(data.films)
-                }
-
-                if(data.species.isNullOrEmpty()) {
-                    rvSpecies.visibility = View.GONE
-                    speciesHeader.visibility = View.GONE
-                    speciesSubHeader.visibility = View.GONE
-                } else {
-                    rvSpecies.visibility = View.VISIBLE
-                    speciesHeader.visibility = View.VISIBLE
-                    speciesSubHeader.visibility = View.VISIBLE
-                    speciesAdapter.updateList(data.species)
-                }
-
-                if(data.vehicles.isNullOrEmpty()) {
-                    rvVehicles.visibility = View.GONE
-                    vehiclesHeader.visibility = View.GONE
-                    vehiclesSubHeader.visibility = View.GONE
-                } else {
-                    rvVehicles.visibility = View.VISIBLE
-                    vehiclesHeader.visibility = View.VISIBLE
-                    vehiclesSubHeader.visibility = View.VISIBLE
-                    vehiclesAdapter.updateList(data.vehicles)
-                }
-
-                if(data.starships.isNullOrEmpty()) {
-                    rvStarship.visibility = View.GONE
-                    starshipHeader.visibility = View.GONE
-                    starshipSubHeader.visibility = View.GONE
-                } else {
-                    rvStarship.visibility = View.VISIBLE
-                    starshipHeader.visibility = View.VISIBLE
-                    starshipSubHeader.visibility = View.VISIBLE
-                    starshipAdapter.updateList(data.starships)
+                    Toast.makeText(this@ResidentDetailActivity, "API error", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
     }
 
     private fun onClickListener() {
-        residentPlanet.setOnClickListener{
+        residentPlanet.setOnClickListener {
             val intent = Intent(this@ResidentDetailActivity, PlanetDetailsActivity::class.java)
             intent.putExtra(ID, homeworld)
             startActivity(intent)
@@ -183,7 +189,7 @@ class ResidentDetailActivity: ComponentActivity() {
         adapterClickAction(starshipAdapter, this@ResidentDetailActivity, StarshipDetailActivity())
     }
 
-    fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
+    private fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
         adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {

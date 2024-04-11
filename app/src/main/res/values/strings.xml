@@ -26,5 +26,6 @@
     <string name="characters">Characters:</string>
     <string name="pilots">Pilots:</string>
     <string name="people">People:</string>
+    <string name="homeworld">Homeworld: %s (click to see details)</string>
 
 </resources>

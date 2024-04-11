@@ -14,8 +14,9 @@ class PlanetListAdapter() : RecyclerView.Adapter<PlanetListAdapter.ViewHolder>()
     var listener: OnClickListener? = null
     var planetList: ArrayList<Planet> = arrayListOf()
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view){
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView
+
         init {
             //todo
             name = view.findViewById(R.id.name)
@@ -28,7 +29,8 @@ class PlanetListAdapter() : RecyclerView.Adapter<PlanetListAdapter.ViewHolder>()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = LayoutInflater.from(parent.context).inflate(R.layout.item_planet, parent, false)
+        val binding =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_planet, parent, false)
         return ViewHolder(binding)
     }
 

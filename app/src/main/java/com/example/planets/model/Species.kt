@@ -13,7 +13,7 @@ data class Species (
     @SerializedName("hair_colors") val hair_colors: String,
     @SerializedName("eye_colors") val eye_colors: String,
     @SerializedName("average_lifespan") val average_lifespan: String,
-    @SerializedName("homeworld") val homeworld: String,
+    @SerializedName("homeworld") val homeworld: String?,
     @SerializedName("language") val language: String,
     @SerializedName("people") val people: ArrayList<String>,
     @SerializedName("films") val films: ArrayList<String>,

@@ -13,37 +13,38 @@ class ResidentAdapter() : RecyclerView.Adapter<ResidentAdapter.ViewHolder>() {
     var listener: OnClickListener? = null
     var list: ArrayList<String> = arrayListOf()
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view){
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView
+
         init {
             //todo
             name = view.findViewById(R.id.name)
         }
 
         fun bind(resident: String, position: Int) {
-            if(resident.contains("people")) {
+            if (resident.contains("people")) {
                 var id = resident.substringAfterLast("people/")
-                id = id.substring(0, id.length-1)
+                id = id.substring(0, id.length - 1)
                 name.text = "Resident ${id}"
-            } else if(resident.contains("films")) {
+            } else if (resident.contains("films")) {
                 var id = resident.substringAfterLast("films/")
-                id = id.substring(0, id.length-1)
+                id = id.substring(0, id.length - 1)
                 name.text = "Film ${id}"
-            } else if(resident.contains("species")) {
+            } else if (resident.contains("species")) {
                 var id = resident.substringAfterLast("species/")
-                id = id.substring(0, id.length-1)
+                id = id.substring(0, id.length - 1)
                 name.text = "Species ${id}"
-            } else if(resident.contains("vehicles")) {
+            } else if (resident.contains("vehicles")) {
                 var id = resident.substringAfterLast("vehicles/")
-                id = id.substring(0, id.length-1)
+                id = id.substring(0, id.length - 1)
                 name.text = "Vehicle ${id}"
-            } else if(resident.contains("starships")) {
+            } else if (resident.contains("starships")) {
                 var id = resident.substringAfterLast("starships/")
-                id = id.substring(0, id.length-1)
+                id = id.substring(0, id.length - 1)
                 name.text = "Starship ${id}"
-            } else if(resident.contains("planets")) {
+            } else if (resident.contains("planets")) {
                 var id = resident.substringAfterLast("planets/")
-                id = id.substring(0, id.length-1)
+                id = id.substring(0, id.length - 1)
                 name.text = "Planet ${id}"
             }
             Log.i("Nitesh", "bind: ${position}").toString()
@@ -51,7 +52,8 @@ class ResidentAdapter() : RecyclerView.Adapter<ResidentAdapter.ViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = LayoutInflater.from(parent.context).inflate(R.layout.item_planet, parent, false)
+        val binding =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_planet, parent, false)
         return ViewHolder(binding)
     }
 

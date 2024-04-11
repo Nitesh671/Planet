@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,8 +20,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var viewBinding: MainActivityBinding
     private val planetViewModel: PlanetViewModel by viewModels()
     lateinit var recyclerview: RecyclerView
-    lateinit var nextButton: Button
-    lateinit var previousButton: Button
+    private lateinit var nextButton: Button
+    private lateinit var previousButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,36 +44,40 @@ class MainActivity : ComponentActivity() {
 
     private fun observer() {
         planetViewModel.apply {
-            planetLiveDate.observe(this@MainActivity) { data->
-                if(data.previous.isNullOrEmpty()) {
-                    previousButton.setEnabled(false)
-                    previousButton.visibility = View.GONE
-                } else {
-                    previousButton.setEnabled(true)
-                    previousButton.visibility = View.VISIBLE
-                }
-                if(data.next.isNullOrEmpty()) {
-                    nextButton.setEnabled(false)
-                    nextButton.visibility = View.GONE
-                } else {
-                    nextButton.setEnabled(true)
-                    nextButton.visibility = View.VISIBLE
-                }
+            planetLiveDate.observe(this@MainActivity) { data ->
+                if (data != null) {
+                    if (data.previous.isNullOrEmpty()) {
+                        previousButton.setEnabled(false)
+                        previousButton.visibility = View.GONE
+                    } else {
+                        previousButton.setEnabled(true)
+                        previousButton.visibility = View.VISIBLE
+                    }
+                    if (data.next.isNullOrEmpty()) {
+                        nextButton.setEnabled(false)
+                        nextButton.visibility = View.GONE
+                    } else {
+                        nextButton.setEnabled(true)
+                        nextButton.visibility = View.VISIBLE
+                    }
 
-                nextButton.setOnClickListener{
-                    val ex = data.next?.substringAfterLast("=")
-                    Log.i("Nitesh next", "observer: $ex")
-                    data.next?.substringAfterLast("=")
-                        ?.let { it1 -> planetViewModel.changePage(it1) }
-                }
-                previousButton.setOnClickListener{
-                    val ex = data.previous?.substringAfterLast("=")
-                    Log.i("Nitesh previous", "observer: $ex")
-                    data.previous?.substringAfterLast("=")
-                        ?.let { it1 -> planetViewModel.changePage(it1) }
-                }
+                    nextButton.setOnClickListener {
+                        val ex = data.next?.substringAfterLast("=")
+                        Log.i("Nitesh next", "observer: $ex")
+                        data.next?.substringAfterLast("=")
+                            ?.let { it1 -> planetViewModel.changePage(it1) }
+                    }
+                    previousButton.setOnClickListener {
+                        val ex = data.previous?.substringAfterLast("=")
+                        Log.i("Nitesh previous", "observer: $ex")
+                        data.previous?.substringAfterLast("=")
+                            ?.let { it1 -> planetViewModel.changePage(it1) }
+                    }
 
-                data?.results?.let { planetAdapter.updateList(it) }
+                    planetAdapter.updateList(data.results)
+                } else {
+                    Toast.makeText(this@MainActivity, "API error", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

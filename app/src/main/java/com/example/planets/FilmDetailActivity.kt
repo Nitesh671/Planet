@@ -8,6 +8,7 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,35 +17,34 @@ import com.example.planets.PlanetDetailsActivity.Companion.ID
 import com.example.planets.databinding.FilmDetailActivityBinding
 import com.example.planets.model.PlanetViewModel
 
-class FilmDetailActivity: ComponentActivity() {
-
+class FilmDetailActivity : ComponentActivity() {
     private lateinit var viewBinding: FilmDetailActivityBinding
     private lateinit var filmDetails: TextView
 
     private lateinit var residentHeader: TextView
     private lateinit var residentSubHeader: TextView
     private lateinit var residentAdapter: ResidentAdapter
-    lateinit var rvResident: RecyclerView
+    private lateinit var rvResident: RecyclerView
 
     private lateinit var planetHeader: TextView
     private lateinit var planetSubHeader: TextView
     private lateinit var planetAdapter: ResidentAdapter
-    lateinit var rvPlanet: RecyclerView
+    private lateinit var rvPlanet: RecyclerView
 
     private lateinit var starshipHeader: TextView
     private lateinit var starshipSubHeader: TextView
     private lateinit var starshipAdapter: ResidentAdapter
-    lateinit var rvStarship: RecyclerView
+    private lateinit var rvStarship: RecyclerView
 
     private lateinit var vehiclesHeader: TextView
     private lateinit var vehiclesSubHeader: TextView
     private lateinit var vehiclesAdapter: ResidentAdapter
-    lateinit var rvVehicles: RecyclerView
+    private lateinit var rvVehicles: RecyclerView
 
     private lateinit var speciesHeader: TextView
     private lateinit var speciesSubHeader: TextView
     private lateinit var speciesAdapter: ResidentAdapter
-    lateinit var rvSpecies: RecyclerView
+    private lateinit var rvSpecies: RecyclerView
 
     private val planetViewModel: PlanetViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,77 +108,81 @@ class FilmDetailActivity: ComponentActivity() {
         onClickListener()
     }
 
-    fun observer() {
+    private fun observer() {
         planetViewModel.apply {
-            filmData.observe(this@FilmDetailActivity) {data->
-                val html = "<p>Title: ${data.title}</p>" +
-                        "<p>Episode number: ${data.episodeId}</p>" +
-                        "<p>Opening Crawl: ${data.openingCrawl}</p>" +
-                        "<p>Director: ${data.director}</p>" +
-                        "<p>Producer: ${data.producer}</p>" +
-                        "<p>Release Data: ${data.releaseDate}</p>"
+            filmData.observe(this@FilmDetailActivity) { data ->
+                if (data != null) {
+                    val html = "<p>Title: ${data.title}</p>" +
+                            "<p>Episode ID: ${data.episodeId}</p>" +
+                            "<p>Opening Crawl: ${data.openingCrawl}</p>" +
+                            "<p>Director: ${data.director}</p>" +
+                            "<p>Producer: ${data.producer}</p>" +
+                            "<p>Release Data: ${data.releaseDate}</p>"
 
-                filmDetails.text = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
+                    filmDetails.text = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
 
-                if(data.characters.isNullOrEmpty()) {
-                    rvResident.visibility = View.GONE
-                    residentHeader.visibility = View.GONE
-                    residentSubHeader.visibility = View.GONE
+                    if (data.characters.isEmpty()) {
+                        rvResident.visibility = View.GONE
+                        residentHeader.visibility = View.GONE
+                        residentSubHeader.visibility = View.GONE
+                    } else {
+                        rvResident.visibility = View.VISIBLE
+                        residentHeader.visibility = View.VISIBLE
+                        residentSubHeader.visibility = View.VISIBLE
+                        residentAdapter.updateList(data.characters)
+                    }
+
+                    if (data.planets.isEmpty()) {
+                        rvPlanet.visibility = View.GONE
+                        planetHeader.visibility = View.GONE
+                        planetSubHeader.visibility = View.GONE
+                    } else {
+                        rvPlanet.visibility = View.VISIBLE
+                        planetHeader.visibility = View.VISIBLE
+                        planetSubHeader.visibility = View.VISIBLE
+                        planetAdapter.updateList(data.planets)
+                    }
+
+                    if (data.starships.isEmpty()) {
+                        rvStarship.visibility = View.GONE
+                        starshipHeader.visibility = View.GONE
+                        starshipSubHeader.visibility = View.GONE
+                    } else {
+                        rvStarship.visibility = View.VISIBLE
+                        starshipHeader.visibility = View.VISIBLE
+                        starshipSubHeader.visibility = View.VISIBLE
+                        starshipAdapter.updateList(data.starships)
+                    }
+
+                    if (data.vehicles.isEmpty()) {
+                        rvVehicles.visibility = View.GONE
+                        vehiclesHeader.visibility = View.GONE
+                        vehiclesSubHeader.visibility = View.GONE
+                    } else {
+                        rvVehicles.visibility = View.VISIBLE
+                        vehiclesHeader.visibility = View.VISIBLE
+                        vehiclesSubHeader.visibility = View.VISIBLE
+                        vehiclesAdapter.updateList(data.vehicles)
+                    }
+
+                    if (data.species.isEmpty()) {
+                        rvSpecies.visibility = View.GONE
+                        speciesHeader.visibility = View.GONE
+                        speciesSubHeader.visibility = View.GONE
+                    } else {
+                        rvSpecies.visibility = View.VISIBLE
+                        speciesHeader.visibility = View.VISIBLE
+                        speciesSubHeader.visibility = View.VISIBLE
+                        speciesAdapter.updateList(data.species)
+                    }
                 } else {
-                    rvResident.visibility = View.VISIBLE
-                    residentHeader.visibility = View.VISIBLE
-                    residentSubHeader.visibility = View.VISIBLE
-                    data?.characters?.let { residentAdapter.updateList(it) }
-                }
-
-                if(data.planets.isNullOrEmpty()) {
-                    rvPlanet.visibility = View.GONE
-                    planetHeader.visibility = View.GONE
-                    planetSubHeader.visibility = View.GONE
-                } else {
-                    rvPlanet.visibility = View.VISIBLE
-                    planetHeader.visibility = View.VISIBLE
-                    planetSubHeader.visibility = View.VISIBLE
-                    data?.planets?.let { planetAdapter.updateList(it) }
-                }
-
-                if(data.starships.isNullOrEmpty()) {
-                    rvStarship.visibility = View.GONE
-                    starshipHeader.visibility = View.GONE
-                    starshipSubHeader.visibility = View.GONE
-                } else {
-                    rvStarship.visibility = View.VISIBLE
-                    starshipHeader.visibility = View.VISIBLE
-                    starshipSubHeader.visibility = View.VISIBLE
-                    starshipAdapter.updateList(data.starships)
-                }
-
-                if(data.vehicles.isNullOrEmpty()) {
-                    rvVehicles.visibility = View.GONE
-                    vehiclesHeader.visibility = View.GONE
-                    vehiclesSubHeader.visibility = View.GONE
-                } else {
-                    rvVehicles.visibility = View.VISIBLE
-                    vehiclesHeader.visibility = View.VISIBLE
-                    vehiclesSubHeader.visibility = View.VISIBLE
-                    vehiclesAdapter.updateList(data.vehicles)
-                }
-
-                if(data.species.isNullOrEmpty()) {
-                    rvSpecies.visibility = View.GONE
-                    speciesHeader.visibility = View.GONE
-                    speciesSubHeader.visibility = View.GONE
-                } else {
-                    rvSpecies.visibility = View.VISIBLE
-                    speciesHeader.visibility = View.VISIBLE
-                    speciesSubHeader.visibility = View.VISIBLE
-                    speciesAdapter.updateList(data.species)
+                    Toast.makeText(this@FilmDetailActivity, "API error", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    fun onClickListener() {
+    private fun onClickListener() {
         adapterClickAction(residentAdapter, this@FilmDetailActivity, ResidentDetailActivity())
         adapterClickAction(planetAdapter, this@FilmDetailActivity, PlanetDetailsActivity())
         adapterClickAction(starshipAdapter, this@FilmDetailActivity, StarshipDetailActivity())
@@ -186,7 +190,7 @@ class FilmDetailActivity: ComponentActivity() {
         adapterClickAction(speciesAdapter, this@FilmDetailActivity, SpeciesDetailActivity())
     }
 
-    fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
+    private fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
         adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {

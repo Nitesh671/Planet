@@ -8,6 +8,7 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.planets.databinding.VehicleDetailActivityBinding
 import com.example.planets.model.PlanetViewModel
 
-class SpeciesDetailActivity: ComponentActivity() {
+class SpeciesDetailActivity : ComponentActivity() {
     private lateinit var viewBinding: VehicleDetailActivityBinding
     private lateinit var speciesHeader: TextView
     private lateinit var speciesDetails: TextView
@@ -24,16 +25,16 @@ class SpeciesDetailActivity: ComponentActivity() {
     private lateinit var residentHeader: TextView
     private lateinit var residentSubHeader: TextView
     private lateinit var residentAdapter: ResidentAdapter
-    lateinit var rvResident: RecyclerView
+    private lateinit var rvResident: RecyclerView
 
     private lateinit var filmHeader: TextView
     private lateinit var filmSubHeader: TextView
     private lateinit var filmAdapter: ResidentAdapter
-    lateinit var rvFilm: RecyclerView
+    private lateinit var rvFilm: RecyclerView
 
     private val planetViewModel: PlanetViewModel by viewModels()
 
-    var homeworld = ""
+    private var homeworld = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,60 +76,64 @@ class SpeciesDetailActivity: ComponentActivity() {
         onClickListener()
     }
 
-    fun observer() {
+    private fun observer() {
         planetViewModel.apply {
             speciesData.observe(this@SpeciesDetailActivity) { data ->
+                if (data != null) {
+                    val html = "<p>Name: ${data.name}</p>" +
+                            "<p>Classification: ${data.classification}</p>" +
+                            "<p>Designation: ${data.designation}</p>" +
+                            "<p>Average Height: ${data.averageHeight}</p>" +
+                            "<p>Skin Colors: ${data.skin_colors}</p>" +
+                            "<p>Hair Colors: ${data.hair_colors}</p>" +
+                            "<p>Eye Colors: ${data.eye_colors}</p>" +
+                            "<p>Average Lifespan: ${data.average_lifespan}</p>" +
+                            "<p>Language: ${data.language}</p>"
 
-                val html = "<p>Name: ${data.name}</p>" +
-                        "<p>Classification: ${data.classification}</p>" +
-                        "<p>Designation: ${data.designation}</p>" +
-                        "<p>Average Height: ${data.averageHeight}</p>" +
-                        "<p>Skin Colors: ${data.skin_colors}</p>" +
-                        "<p>Hair Colors: ${data.hair_colors}</p>" +
-                        "<p>Eye Colors: ${data.eye_colors}</p>" +
-                        "<p>Average Lifespan: ${data.average_lifespan}</p>" +
-                        "<p>Language: ${data.language}</p>"
+                    speciesDetails.text = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
 
-                speciesDetails.text = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
+                    if (data.homeworld.isNullOrEmpty()) {
+                        homeworldPlanet.visibility = View.GONE
+                    } else {
+                        homeworld = data.homeworld
+                        var planet = data.homeworld.substringAfterLast("planets/")
+                        planet = planet.substring(0, planet.length - 1)
+                        homeworldPlanet.text = String.format(getString(R.string.homeworld), planet)
+                        homeworldPlanet.visibility = View.VISIBLE
+                    }
 
-                if(data.homeworld.isNullOrEmpty()) {
-                    homeworldPlanet.visibility = View.GONE
+                    if (data.people.isEmpty()) {
+                        rvResident.visibility = View.GONE
+                        residentHeader.visibility = View.GONE
+                        residentSubHeader.visibility = View.GONE
+                    } else {
+                        residentHeader.text = getString(R.string.people)
+                        rvResident.visibility = View.VISIBLE
+                        residentHeader.visibility = View.VISIBLE
+                        residentSubHeader.visibility = View.VISIBLE
+                        residentAdapter.updateList(data.people)
+                    }
+
+                    if (data.films.isEmpty()) {
+                        rvFilm.visibility = View.GONE
+                        filmHeader.visibility = View.GONE
+                        filmSubHeader.visibility = View.GONE
+                    } else {
+                        rvFilm.visibility = View.VISIBLE
+                        filmHeader.visibility = View.VISIBLE
+                        filmSubHeader.visibility = View.VISIBLE
+                        filmAdapter.updateList(data.films)
+                    }
                 } else {
-                    homeworld = data.homeworld
-                    var planet = data.homeworld.substringAfterLast("planets/")
-                    planet = planet.substring(0, planet.length - 1)
-                    homeworldPlanet.text = "Homeworld: ${planet} (click to see details)"
-                    homeworldPlanet.visibility = View.VISIBLE
-                }
-
-                if(data.people.isNullOrEmpty()) {
-                    rvResident.visibility = View.GONE
-                    residentHeader.visibility = View.GONE
-                    residentSubHeader.visibility = View.GONE
-                } else {
-                    residentHeader.text = getString(R.string.people)
-                    rvResident.visibility = View.VISIBLE
-                    residentHeader.visibility = View.VISIBLE
-                    residentSubHeader.visibility = View.VISIBLE
-                    data?.people?.let { residentAdapter.updateList(it) }
-                }
-
-                if(data.films.isNullOrEmpty()) {
-                    rvFilm.visibility = View.GONE
-                    filmHeader.visibility = View.GONE
-                    filmSubHeader.visibility = View.GONE
-                } else {
-                    rvFilm.visibility = View.VISIBLE
-                    filmHeader.visibility = View.VISIBLE
-                    filmSubHeader.visibility = View.VISIBLE
-                    filmAdapter.updateList(data.films)
+                    Toast.makeText(this@SpeciesDetailActivity, "API error", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
     }
 
-    fun onClickListener() {
-        homeworldPlanet.setOnClickListener{
+    private fun onClickListener() {
+        homeworldPlanet.setOnClickListener {
             val intent = Intent(this@SpeciesDetailActivity, PlanetDetailsActivity::class.java)
             intent.putExtra(PlanetDetailsActivity.ID, homeworld)
             startActivity(intent)
@@ -138,7 +143,7 @@ class SpeciesDetailActivity: ComponentActivity() {
         adapterClickAction(filmAdapter, this@SpeciesDetailActivity, FilmDetailActivity())
     }
 
-    fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
+    private fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
         adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {

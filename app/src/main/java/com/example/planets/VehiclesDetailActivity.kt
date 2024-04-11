@@ -8,6 +8,7 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.planets.databinding.VehicleDetailActivityBinding
 import com.example.planets.model.PlanetViewModel
 
-class VehiclesDetailActivity: ComponentActivity() {
+class VehiclesDetailActivity : ComponentActivity() {
     private lateinit var viewBinding: VehicleDetailActivityBinding
     private lateinit var vehicleHeader: TextView
     private lateinit var vehicleDetails: TextView
@@ -74,51 +75,56 @@ class VehiclesDetailActivity: ComponentActivity() {
     fun observer() {
         planetViewModel.apply {
             vehicleData.observe(this@VehiclesDetailActivity) { data ->
-                val html = "<p>Name: ${data.name}</p>" +
-                        "<p>Model: ${data.model}</p>" +
-                        "<p>Manufacturer: ${data.manufacturer}</p>" +
-                        "<p>Cost in Credits: ${data.costInCredits}</p>" +
-                        "<p>Length: ${data.length}</p>" +
-                        "<p>Max Atmosphering Speed: ${data.maxAtmospheringSpeed}</p>" +
-                        "<p>Crew: ${data.crew}</p>" +
-                        "<p>Passengers: ${data.passengers}</p>" +
-                        "<p>Cargo Capacity: ${data.cargo_capacity}</p>" +
-                        "<p>Consumables: ${data.consumables}</p>" +
-                        "<p>Vehicle Class: ${data.vehicle_class}</p>"
+                if (data != null) {
+                    val html = "<p>Name: ${data.name}</p>" +
+                            "<p>Model: ${data.model}</p>" +
+                            "<p>Manufacturer: ${data.manufacturer}</p>" +
+                            "<p>Cost in Credits: ${data.costInCredits}</p>" +
+                            "<p>Length: ${data.length}</p>" +
+                            "<p>Max Atmosphering Speed: ${data.maxAtmospheringSpeed}</p>" +
+                            "<p>Crew: ${data.crew}</p>" +
+                            "<p>Passengers: ${data.passengers}</p>" +
+                            "<p>Cargo Capacity: ${data.cargo_capacity}</p>" +
+                            "<p>Consumables: ${data.consumables}</p>" +
+                            "<p>Vehicle Class: ${data.vehicle_class}</p>"
 
-                vehicleDetails.text = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
+                    vehicleDetails.text = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
 
-                if(data.pilots.isNullOrEmpty()) {
-                    rvResident.visibility = View.GONE
-                    residentHeader.visibility = View.GONE
-                    residentSubHeader.visibility = View.GONE
+                    if (data.pilots.isEmpty()) {
+                        rvResident.visibility = View.GONE
+                        residentHeader.visibility = View.GONE
+                        residentSubHeader.visibility = View.GONE
+                    } else {
+                        rvResident.visibility = View.VISIBLE
+                        residentHeader.visibility = View.VISIBLE
+                        residentSubHeader.visibility = View.VISIBLE
+                        residentAdapter.updateList(data.pilots)
+                    }
+
+                    if (data.films.isEmpty()) {
+                        rvFilm.visibility = View.GONE
+                        filmHeader.visibility = View.GONE
+                        filmSubHeader.visibility = View.GONE
+                    } else {
+                        rvFilm.visibility = View.VISIBLE
+                        filmHeader.visibility = View.VISIBLE
+                        filmSubHeader.visibility = View.VISIBLE
+                        filmAdapter.updateList(data.films)
+                    }
                 } else {
-                    rvResident.visibility = View.VISIBLE
-                    residentHeader.visibility = View.VISIBLE
-                    residentSubHeader.visibility = View.VISIBLE
-                    data?.pilots?.let { residentAdapter.updateList(it) }
-                }
-
-                if(data.films.isNullOrEmpty()) {
-                    rvFilm.visibility = View.GONE
-                    filmHeader.visibility = View.GONE
-                    filmSubHeader.visibility = View.GONE
-                } else {
-                    rvFilm.visibility = View.VISIBLE
-                    filmHeader.visibility = View.VISIBLE
-                    filmSubHeader.visibility = View.VISIBLE
-                    filmAdapter.updateList(data.films)
+                    Toast.makeText(this@VehiclesDetailActivity, "API error", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
     }
 
-    fun onClickListener() {
+    private fun onClickListener() {
         adapterClickAction(residentAdapter, this@VehiclesDetailActivity, ResidentDetailActivity())
         adapterClickAction(filmAdapter, this@VehiclesDetailActivity, FilmDetailActivity())
     }
 
-    fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
+    private fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
         adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {

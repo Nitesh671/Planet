@@ -15,7 +15,7 @@ class PlanetRepository {
 
     suspend fun getPlanets(): PlanetResponse? {
         return try {
-            return apiService.getPlanets()
+            apiService.getPlanets()
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -24,7 +24,7 @@ class PlanetRepository {
 
     suspend fun changePage(url: String): PlanetResponse? {
         return try {
-            return apiService.getPage(url)
+            apiService.getPage(url)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -33,7 +33,7 @@ class PlanetRepository {
 
     suspend fun getPlanetData(url: String): Planet? {
         return try {
-            return apiService.getPlanetData(url)
+            apiService.getPlanetData(url)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -42,7 +42,7 @@ class PlanetRepository {
 
     suspend fun getResident(url: String): Resident? {
         return try {
-            return apiService.getResident(url)
+            apiService.getResident(url)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -51,7 +51,7 @@ class PlanetRepository {
 
     suspend fun getFilm(url: String): Film? {
         return try {
-            return apiService.getFilm(url)
+            apiService.getFilm(url)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -60,7 +60,7 @@ class PlanetRepository {
 
     suspend fun getVehicle(url: String): Vehicle? {
         return try {
-            return apiService.getVehicle(url)
+            apiService.getVehicle(url)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -69,7 +69,7 @@ class PlanetRepository {
 
     suspend fun getStarship(url: String): Starship? {
         return try {
-            return apiService.getStarship(url)
+            apiService.getStarship(url)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -78,7 +78,7 @@ class PlanetRepository {
 
     suspend fun getSpecies(url: String): Species? {
         return try {
-            return apiService.getSpecies(url)
+            apiService.getSpecies(url)
         } catch (e: Exception) {
             e.printStackTrace()
             null

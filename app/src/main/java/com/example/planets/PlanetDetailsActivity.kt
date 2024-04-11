@@ -8,6 +8,7 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,9 +28,9 @@ class PlanetDetailsActivity : ComponentActivity() {
     private lateinit var filmSubHeader: TextView
 
     private lateinit var residentAdapter: ResidentAdapter
-    lateinit var rvResident: RecyclerView
+    private lateinit var rvResident: RecyclerView
     private lateinit var filmAdapter: ResidentAdapter
-    lateinit var rvFilm: RecyclerView
+    private lateinit var rvFilm: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +49,7 @@ class PlanetDetailsActivity : ComponentActivity() {
         filmHeader = findViewById(R.id.film_header)
         filmSubHeader = findViewById(R.id.film_info)
 
-        var url = getIntent().getStringExtra(ID)
+        var url = intent.getStringExtra(ID)
         url = url?.substringAfterLast("planets/")
 
         rvResident.layoutManager = LinearLayoutManager(this@PlanetDetailsActivity)
@@ -68,54 +69,59 @@ class PlanetDetailsActivity : ComponentActivity() {
         onClickListener()
     }
 
-    fun observer() {
+    private fun observer() {
         planetViewModel.apply {
-            planetDate.observe(this@PlanetDetailsActivity) {data->
-                name.text = data.name
-                val html = "<p>Rotation Period:  ${data.rotation_period}</p>" +
-                        "<p>Orbital Period: ${data.orbital_period}</p>" +
-                        "<p>Diameter:  ${data.diameter}</p>" +
-                        "<p>Climate: ${data.climate}</p>" +
-                        "<p>Gravity: ${data.gravity}</p>" +
-                        "<p>Terrian: ${data.terrian}</p>" +
-                        "<p>Surface water: ${data.surface_water}</p>" +
-                        "<p>Population: ${data.population}</p>" +
-                        "<p>Number of residents: ${data.residents.size}</p>" +
-                        "<p>Number of films: ${data.films.size}</p>"
-                details.text =
-                    Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
+            planetDate.observe(this@PlanetDetailsActivity) { data ->
+                if (data != null) {
+                    name.text = data.name
+                    val html = "<p>Rotation Period:  ${data.rotation_period}</p>" +
+                            "<p>Orbital Period: ${data.orbital_period}</p>" +
+                            "<p>Diameter:  ${data.diameter}</p>" +
+                            "<p>Climate: ${data.climate}</p>" +
+                            "<p>Gravity: ${data.gravity}</p>" +
+                            "<p>Terrian: ${data.terrian}</p>" +
+                            "<p>Surface water: ${data.surface_water}</p>" +
+                            "<p>Population: ${data.population}</p>" +
+                            "<p>Number of residents: ${data.residents.size}</p>" +
+                            "<p>Number of films: ${data.films.size}</p>"
+                    details.text =
+                        Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
 
-                if(data.residents.isNullOrEmpty()) {
-                    rvResident.visibility = View.GONE
-                    residentHeader.visibility = View.GONE
-                    residentSubHeader.visibility = View.GONE
-                } else {
-                    rvResident.visibility = View.VISIBLE
-                    residentHeader.visibility = View.VISIBLE
-                    residentSubHeader.visibility = View.VISIBLE
-                    data?.residents?.let { residentAdapter.updateList(it) }
-                }
+                    if (data.residents.isEmpty()) {
+                        rvResident.visibility = View.GONE
+                        residentHeader.visibility = View.GONE
+                        residentSubHeader.visibility = View.GONE
+                    } else {
+                        rvResident.visibility = View.VISIBLE
+                        residentHeader.visibility = View.VISIBLE
+                        residentSubHeader.visibility = View.VISIBLE
+                        residentAdapter.updateList(data.residents)
+                    }
 
-                if(data.films.isNullOrEmpty()) {
-                    rvFilm.visibility = View.GONE
-                    filmHeader.visibility = View.GONE
-                    filmSubHeader.visibility = View.GONE
+                    if (data.films.isEmpty()) {
+                        rvFilm.visibility = View.GONE
+                        filmHeader.visibility = View.GONE
+                        filmSubHeader.visibility = View.GONE
+                    } else {
+                        rvFilm.visibility = View.VISIBLE
+                        filmHeader.visibility = View.VISIBLE
+                        filmSubHeader.visibility = View.VISIBLE
+                        filmAdapter.updateList(data.films)
+                    }
                 } else {
-                    rvFilm.visibility = View.VISIBLE
-                    filmHeader.visibility = View.VISIBLE
-                    filmSubHeader.visibility = View.VISIBLE
-                    data?.films?.let { filmAdapter.updateList(it) }
+                    Toast.makeText(this@PlanetDetailsActivity, "API error", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
     }
 
-    fun onClickListener() {
+    private fun onClickListener() {
         adapterClickAction(residentAdapter, this@PlanetDetailsActivity, ResidentDetailActivity())
         adapterClickAction(filmAdapter, this@PlanetDetailsActivity, FilmDetailActivity())
     }
 
-    fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
+    private fun adapterClickAction(adapter: ResidentAdapter, context: Context, activity: Activity) {
         adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {
