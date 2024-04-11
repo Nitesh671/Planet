@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Vehicle (
+data class Starship (
     @SerializedName("name") val name: String,
     @SerializedName("model") val model: String,
     @SerializedName("manufacturer") val manufacturer: String,
@@ -15,10 +15,13 @@ data class Vehicle (
     @SerializedName("passengers") val passengers: String,
     @SerializedName("cargo_capacity") val cargo_capacity: String,
     @SerializedName("consumables") val consumables: String,
-    @SerializedName("vehicle_class") val vehicle_class: String,
+    @SerializedName("hyperdrive_rating") val hyperdriveRating: String,
+    @SerializedName("MGLT") val MGLT: String,
+    @SerializedName("starship_class") val starshipClass: String,
     @SerializedName("pilots") val pilots: ArrayList<String>,
     @SerializedName("films") val films: ArrayList<String>,
     @SerializedName("created") val created: String,
     @SerializedName("edited") val edited: String,
     @SerializedName("url") val url: String
 )
+

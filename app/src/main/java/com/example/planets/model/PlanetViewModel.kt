@@ -33,6 +33,14 @@ class PlanetViewModel(application: Application): AndroidViewModel(application = 
     val vehicleData: LiveData<Vehicle>
         get() = _vehicleData
 
+    private var _starshipData: MutableLiveData<Starship> = MutableLiveData()
+    val starshipData: LiveData<Starship>
+        get() = _starshipData
+
+    private var _speciesData: MutableLiveData<Species> = MutableLiveData()
+    val speciesData: LiveData<Species>
+        get() = _speciesData
+
     private val planetRepository = PlanetRepository()
 
     fun fetchPlanets() {
@@ -85,6 +93,24 @@ class PlanetViewModel(application: Application): AndroidViewModel(application = 
             val result = planetRepository.getVehicle(url)
             withContext(Dispatchers.Main) {
                 _vehicleData.value = result
+            }
+        }
+    }
+
+    fun fetchStarship(url: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = planetRepository.getStarship(url)
+            withContext(Dispatchers.Main) {
+                _starshipData.value = result
+            }
+        }
+    }
+
+    fun fetchSpecies(url: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = planetRepository.getSpecies(url)
+            withContext(Dispatchers.Main) {
+                _speciesData.value = result
             }
         }
     }

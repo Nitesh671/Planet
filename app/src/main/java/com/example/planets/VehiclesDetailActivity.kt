@@ -17,6 +17,7 @@ import com.example.planets.model.PlanetViewModel
 
 class VehiclesDetailActivity: ComponentActivity() {
     private lateinit var viewBinding: VehicleDetailActivityBinding
+    private lateinit var vehicleHeader: TextView
     private lateinit var vehicleDetails: TextView
 
     private lateinit var residentHeader: TextView
@@ -36,6 +37,7 @@ class VehiclesDetailActivity: ComponentActivity() {
         viewBinding = VehicleDetailActivityBinding.inflate(layoutInflater)
         setContentView(R.layout.vehicle_detail_activity)
 
+        vehicleHeader = findViewById(R.id.vehicleHeader)
         vehicleDetails = findViewById(R.id.vehicle_details)
 
         rvResident = findViewById(R.id.rv_character_list)
@@ -64,6 +66,7 @@ class VehiclesDetailActivity: ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
+        vehicleHeader.text = getString(R.string.vehicle_details)
         observer()
         onClickListener()
     }

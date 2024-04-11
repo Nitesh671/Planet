@@ -1,5 +1,4 @@
 import com.google.gson.annotations.SerializedName
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,32 +11,18 @@ data class PlanetResponse (
 
 @Serializable
 data class Planet(
-    @SerialName("name")
-    val name: String,
-    @SerialName("rotation_period")
-    val rotation_period: String,
-    @SerialName("oribital_period")
-    val orbital_period: String,
-    @SerialName("diameter")
-    val diameter: String,
-    @SerialName("climate")
-    val climate: String,
-    @SerialName("gravity")
-    val gravity: String,
-    @SerialName("terrain")
-    val terrian: String,
-    @SerialName("surface_water")
-    val surface_water: String,
-    @SerialName("population")
-    val population: String,
-    @SerialName("residents")
-    val residents: ArrayList<String>,
-    @SerialName("films")
-    val films: ArrayList<String>,
-    @SerialName("created")
-    val created: String,
-    @SerialName("edited")
-    val edited: String,
-    @SerialName("url")
-    val url: String
+    @SerializedName("name") val name: String,
+    @SerializedName("rotation_period") val rotation_period: String,
+    @SerializedName("oribital_period") val orbital_period: String,
+    @SerializedName("diameter") val diameter: String,
+    @SerializedName("climate") val climate: String,
+    @SerializedName("gravity") val gravity: String,
+    @SerializedName("terrain") val terrian: String,
+    @SerializedName("surface_water") val surface_water: String,
+    @SerializedName("population") val population: String,
+    @SerializedName("residents") val residents: ArrayList<String>,
+    @SerializedName("films") val films: ArrayList<String>,
+    @SerializedName("created") val created: String,
+    @SerializedName("edited") val edited: String,
+    @SerializedName("url") val url: String
 )

@@ -1,7 +1,6 @@
 package com.example.planets.model
 
 import com.google.gson.annotations.SerializedName
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -17,7 +16,7 @@ data class Film (
     @SerializedName("starships") val starships: ArrayList<String>,
     @SerializedName("vehicles") val vehicles: ArrayList<String>,
     @SerializedName("species") val species: ArrayList<String>,
-    @SerialName("created") val created: String,
-    @SerialName("edited") val edited: String,
-    @SerialName("url") val url: String
+    @SerializedName("created") val created: String,
+    @SerializedName("edited") val edited: String,
+    @SerializedName("url") val url: String
 )

@@ -1,5 +1,7 @@
 import com.example.planets.model.Film
 import com.example.planets.model.Resident
+import com.example.planets.model.Species
+import com.example.planets.model.Starship
 import com.example.planets.model.Vehicle
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -24,4 +26,10 @@ interface ApiService {
 
     @GET("vehicles/{id}")
     suspend fun getVehicle(@Path("id") id: String): Vehicle?
+
+    @GET("starships/{id}")
+    suspend fun getStarship(@Path("id") id: String): Starship?
+
+    @GET("species/{id}")
+    suspend fun getSpecies(@Path("id") id: String): Species?
 }

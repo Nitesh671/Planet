@@ -37,6 +37,17 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <TextView
+                android:id="@+id/homeworld"
+                style="@style/RecyclerViewNameTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/vehicle_details"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
                 android:id="@+id/character_header"
                 style="@style/RecyclerViewNameTextStyle"
                 android:textSize="60px"
@@ -44,7 +55,7 @@
                 android:text="@string/pilots"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/vehicle_details"
+                app:layout_constraintTop_toBottomOf="@id/homeworld"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="20dp"

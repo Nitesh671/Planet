@@ -4,7 +4,7 @@
     <string name="next">Next</string>
     <string name="name">Name:</string>
     <string name="planet_details">Planet details:</string>
-    <string name="planets">Planets</string>
+    <string name="planets">Planets:</string>
     <string name="residents">Residents:</string>
     <string name="resident_sub_header">(to see the residents details click ono the tile of the resident)</string>
     <string name="film_sub_header">(to see the film details click ono the tile of the resident)</string>
@@ -16,14 +16,15 @@
     <string name="pilot_sub_header">(to see the pilot details click ono the tile of the resident)</string>
     <string name="films">Films:</string>
     <string name="resident_details">Resident Details</string>
-    <string name="species">Species</string>
-    <string name="vehicles">Vehicles</string>
-    <string name="starships">Starships</string>
+    <string name="species">Species:</string>
+    <string name="vehicles">Vehicles:</string>
+    <string name="starships">Starships:</string>
     <string name="species_details">Species Details</string>
     <string name="starship_details">Starship Details</string>
     <string name="vehicle_details">Vehicle Details</string>
     <string name="film_details">Film Details</string>
-    <string name="characters">Characters</string>
-    <string name="pilots">Pilots</string>
+    <string name="characters">Characters:</string>
+    <string name="pilots">Pilots:</string>
+    <string name="people">People:</string>
 
 </resources>
