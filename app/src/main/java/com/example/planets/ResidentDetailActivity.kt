@@ -171,7 +171,7 @@ class ResidentDetailActivity: ComponentActivity() {
     private fun onClickListener() {
         residentPlanet.setOnClickListener{
             val intent = Intent(this@ResidentDetailActivity, PlanetDetailsActivity::class.java)
-            intent.putExtra(MainActivity.PLANET_ID, homeworld)
+            intent.putExtra(ID, homeworld)
             startActivity(intent)
         }
 

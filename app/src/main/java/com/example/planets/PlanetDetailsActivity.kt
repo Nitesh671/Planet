@@ -10,7 +10,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.planets.MainActivity.Companion.PLANET_ID
 import com.example.planets.databinding.PlanetDetailsActivityBinding
 import com.example.planets.model.PlanetViewModel
 
@@ -47,7 +46,7 @@ class PlanetDetailsActivity : ComponentActivity() {
         filmHeader = findViewById(R.id.film_header)
         filmSubHeader = findViewById(R.id.film_info)
 
-        var url = getIntent().getStringExtra(PLANET_ID)
+        var url = getIntent().getStringExtra(ID)
         url = url?.substringAfterLast("planets/")
 
         rvResident.layoutManager = LinearLayoutManager(this@PlanetDetailsActivity)

@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.planets.PlanetDetailsActivity.Companion.ID
 import com.example.planets.databinding.MainActivityBinding
 import com.example.planets.model.PlanetViewModel
 
@@ -82,13 +83,9 @@ class MainActivity : ComponentActivity() {
             override fun onClick(position: Int, data: Planet) {
                 Log.i("Nitesh adapter", "$position")
                 val intent = Intent(this@MainActivity, PlanetDetailsActivity::class.java)
-                intent.putExtra(PLANET_ID, data.url)
+                intent.putExtra(ID, data.url)
                 startActivity(intent)
             }
         })
-    }
-
-    companion object {
-        const val PLANET_ID = "planet_id"
     }
 }

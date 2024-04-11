@@ -11,6 +11,8 @@
     <string name="species_sub_header">(to see the species details click ono the tile of the resident)</string>
     <string name="vehicles_sub_header">(to see the vehicle details click ono the tile of the resident)</string>
     <string name="starships_sub_header">(to see the starship details click ono the tile of the resident)</string>
+    <string name="character_sub_header">(to see the character details click ono the tile of the resident)</string>
+    <string name="planet_sub_header">(to see the planet details click ono the tile of the resident)</string>
     <string name="films">Films:</string>
     <string name="resident_details">Resident Details</string>
     <string name="species">Species</string>
@@ -19,5 +21,7 @@
     <string name="species_details">Species Details</string>
     <string name="starship_details">Starship Details</string>
     <string name="vehicle_details">Vehicle Details</string>
+    <string name="film_details">Film Details</string>
+    <string name="characters">Characters</string>
 
 </resources>

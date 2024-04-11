@@ -41,6 +41,10 @@ class ResidentAdapter() : RecyclerView.Adapter<ResidentAdapter.ViewHolder>() {
                 var id = resident.substringAfterLast("starships/")
                 id = id.substring(0, id.length-1)
                 name.text = "Starship ${id}"
+            } else if(resident.contains("planets")) {
+                var id = resident.substringAfterLast("planets/")
+                id = id.substring(0, id.length-1)
+                name.text = "Planet ${id}"
             }
             Log.i("Nitesh", "bind: ${position}").toString()
         }
