@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -34,6 +35,8 @@ class SpeciesDetailActivity : ComponentActivity() {
 
     private val planetViewModel: PlanetViewModel by viewModels()
 
+    private lateinit var progress: ProgressBar
+
     private var homeworld = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,17 +44,20 @@ class SpeciesDetailActivity : ComponentActivity() {
         viewBinding = VehicleDetailActivityBinding.inflate(layoutInflater)
         setContentView(R.layout.vehicle_detail_activity)
 
+        progress = findViewById(R.id.pbProgress)
+        progress.visibility = View.VISIBLE
+
         speciesHeader = findViewById(R.id.vehicleHeader)
         speciesDetails = findViewById(R.id.vehicle_details)
         homeworldPlanet = findViewById(R.id.homeworld)
 
         rvResident = findViewById(R.id.rv_character_list)
-        residentAdapter = ResidentAdapter()
+        residentAdapter = ResidentAdapter(this)
         residentHeader = findViewById(R.id.character_header)
         residentSubHeader = findViewById(R.id.character_info)
 
         rvFilm = findViewById(R.id.rv_film_list)
-        filmAdapter = ResidentAdapter()
+        filmAdapter = ResidentAdapter(this)
         filmHeader = findViewById(R.id.film_header)
         filmSubHeader = findViewById(R.id.film_info)
 
@@ -128,6 +134,7 @@ class SpeciesDetailActivity : ComponentActivity() {
                     Toast.makeText(this@SpeciesDetailActivity, "API error", Toast.LENGTH_SHORT)
                         .show()
                 }
+                progress.visibility = View.GONE
             }
         }
     }

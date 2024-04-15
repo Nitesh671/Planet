@@ -1,12 +1,10 @@
 package com.example.planets.model
 
-import Planet
-import com.example.planets.repository.PlanetRepository
-import PlanetResponse
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.planets.repository.PlanetRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -48,6 +46,7 @@ class PlanetViewModel(application: Application): AndroidViewModel(application = 
             val result = planetRepository.getPlanets()
             withContext(Dispatchers.Main) {
                 _planetLiveData.value = result
+
             }
         }
     }
@@ -114,5 +113,4 @@ class PlanetViewModel(application: Application): AndroidViewModel(application = 
             }
         }
     }
-
 }

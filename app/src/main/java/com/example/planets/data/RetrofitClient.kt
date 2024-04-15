@@ -1,3 +1,6 @@
+package com.example.planets.model
+
+import com.example.planets.data.ApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -46,36 +47,41 @@ class FilmDetailActivity : ComponentActivity() {
     private lateinit var speciesAdapter: ResidentAdapter
     private lateinit var rvSpecies: RecyclerView
 
+    private lateinit var progress: ProgressBar
+
     private val planetViewModel: PlanetViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = FilmDetailActivityBinding.inflate(layoutInflater)
         setContentView(R.layout.film_detail_activity)
 
+        progress = findViewById(R.id.pbProgress)
+        progress.visibility = View.VISIBLE
+
         filmDetails = findViewById(R.id.film_details)
 
         rvResident = findViewById(R.id.rv_character_list)
-        residentAdapter = ResidentAdapter()
+        residentAdapter = ResidentAdapter(this)
         residentHeader = findViewById(R.id.character_header)
         residentSubHeader = findViewById(R.id.character_info)
 
         rvPlanet = findViewById(R.id.rv_planet_list)
-        planetAdapter = ResidentAdapter()
+        planetAdapter = ResidentAdapter(this)
         planetHeader = findViewById(R.id.planetheader)
         planetSubHeader = findViewById(R.id.planet_info)
 
         rvStarship = findViewById(R.id.rv_starships_list)
-        starshipAdapter = ResidentAdapter()
+        starshipAdapter = ResidentAdapter(this)
         starshipHeader = findViewById(R.id.starships_header)
         starshipSubHeader = findViewById(R.id.starships_info)
 
         rvVehicles = findViewById(R.id.rv_vehicles_list)
-        vehiclesAdapter = ResidentAdapter()
+        vehiclesAdapter = ResidentAdapter(this)
         vehiclesHeader = findViewById(R.id.vehicles_header)
         vehiclesSubHeader = findViewById(R.id.vehicles_info)
 
         rvSpecies = findViewById(R.id.rv_species_list)
-        speciesAdapter = ResidentAdapter()
+        speciesAdapter = ResidentAdapter(this)
         speciesHeader = findViewById(R.id.species_header)
         speciesSubHeader = findViewById(R.id.species_info)
 
@@ -178,6 +184,7 @@ class FilmDetailActivity : ComponentActivity() {
                 } else {
                     Toast.makeText(this@FilmDetailActivity, "API error", Toast.LENGTH_SHORT).show()
                 }
+                progress.visibility = View.GONE
             }
         }
     }

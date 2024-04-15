@@ -1,16 +1,15 @@
 package com.example.planets.repository
 
-import Planet
-import PlanetResponse
-import RetrofitClient
 import com.example.planets.model.Film
+import com.example.planets.model.Planet
+import com.example.planets.model.PlanetResponse
 import com.example.planets.model.Resident
+import com.example.planets.model.RetrofitClient
 import com.example.planets.model.Species
 import com.example.planets.model.Starship
 import com.example.planets.model.Vehicle
 
 class PlanetRepository {
-
     private val apiService = RetrofitClient.create()
 
     suspend fun getPlanets(): PlanetResponse? {

@@ -1,3 +1,5 @@
+package com.example.planets.model
+
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 

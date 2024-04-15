@@ -1,24 +1,23 @@
 package com.example.planets
 
-import Planet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.planets.model.Planet
 
 
 class PlanetListAdapter() : RecyclerView.Adapter<PlanetListAdapter.ViewHolder>() {
 
-    var listener: OnClickListener? = null
-    var planetList: ArrayList<Planet> = arrayListOf()
+    private var listener: OnClickListener? = null
+    private var planetList: ArrayList<Planet> = arrayListOf()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView
 
         init {
-            //todo
             name = view.findViewById(R.id.name)
         }
 

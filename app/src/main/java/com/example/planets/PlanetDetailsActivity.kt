@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -32,6 +33,8 @@ class PlanetDetailsActivity : ComponentActivity() {
     private lateinit var filmAdapter: ResidentAdapter
     private lateinit var rvFilm: RecyclerView
 
+    private lateinit var progress: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = PlanetDetailsActivityBinding.inflate(layoutInflater)
@@ -39,13 +42,16 @@ class PlanetDetailsActivity : ComponentActivity() {
         name = findViewById(R.id.planetname)
         details = findViewById(R.id.details)
 
+        progress = findViewById(R.id.pbProgress)
+        progress.visibility = View.VISIBLE
+
         rvResident = findViewById(R.id.rv_resident_list)
-        residentAdapter = ResidentAdapter()
+        residentAdapter = ResidentAdapter(this)
         residentHeader = findViewById(R.id.resident_header)
         residentSubHeader = findViewById(R.id.resident_info)
 
         rvFilm = findViewById(R.id.rv_film_list)
-        filmAdapter = ResidentAdapter()
+        filmAdapter = ResidentAdapter(this)
         filmHeader = findViewById(R.id.film_header)
         filmSubHeader = findViewById(R.id.film_info)
 
@@ -112,6 +118,7 @@ class PlanetDetailsActivity : ComponentActivity() {
                     Toast.makeText(this@PlanetDetailsActivity, "API error", Toast.LENGTH_SHORT)
                         .show()
                 }
+                progress.visibility = View.GONE
             }
         }
     }

@@ -1,11 +1,11 @@
 package com.example.planets
 
-import Planet
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.planets.PlanetDetailsActivity.Companion.ID
 import com.example.planets.databinding.MainActivityBinding
+import com.example.planets.model.Planet
 import com.example.planets.model.PlanetViewModel
 
 class MainActivity : ComponentActivity() {
@@ -22,6 +23,7 @@ class MainActivity : ComponentActivity() {
     lateinit var recyclerview: RecyclerView
     private lateinit var nextButton: Button
     private lateinit var previousButton: Button
+    private lateinit var progress: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,8 @@ class MainActivity : ComponentActivity() {
         recyclerview = findViewById(R.id.rv_card)
         nextButton = findViewById(R.id.next)
         previousButton = findViewById(R.id.previous)
+        progress = findViewById(R.id.pbProgress)
+        progress.visibility = View.VISIBLE
         planetAdapter = PlanetListAdapter()
         recyclerview.layoutManager = LinearLayoutManager(this@MainActivity)
         recyclerview.adapter = planetAdapter
@@ -78,6 +82,7 @@ class MainActivity : ComponentActivity() {
                 } else {
                     Toast.makeText(this@MainActivity, "API error", Toast.LENGTH_SHORT).show()
                 }
+                progress.visibility = View.GONE
             }
         }
     }

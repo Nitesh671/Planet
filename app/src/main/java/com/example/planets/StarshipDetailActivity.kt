@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -31,6 +32,8 @@ class StarshipDetailActivity : ComponentActivity() {
     private lateinit var filmAdapter: ResidentAdapter
     private lateinit var rvFilm: RecyclerView
 
+    private lateinit var progress: ProgressBar
+
     private val planetViewModel: PlanetViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,16 +41,19 @@ class StarshipDetailActivity : ComponentActivity() {
         viewBinding = VehicleDetailActivityBinding.inflate(layoutInflater)
         setContentView(R.layout.vehicle_detail_activity)
 
+        progress = findViewById(R.id.pbProgress)
+        progress.visibility = View.VISIBLE
+
         starshipHeader = findViewById(R.id.vehicleHeader)
         starshipDetails = findViewById(R.id.vehicle_details)
 
         rvResident = findViewById(R.id.rv_character_list)
-        residentAdapter = ResidentAdapter()
+        residentAdapter = ResidentAdapter(this)
         residentHeader = findViewById(R.id.character_header)
         residentSubHeader = findViewById(R.id.character_info)
 
         rvFilm = findViewById(R.id.rv_film_list)
-        filmAdapter = ResidentAdapter()
+        filmAdapter = ResidentAdapter(this)
         filmHeader = findViewById(R.id.film_header)
         filmSubHeader = findViewById(R.id.film_info)
 
@@ -117,6 +123,7 @@ class StarshipDetailActivity : ComponentActivity() {
                     Toast.makeText(this@StarshipDetailActivity, "API error", Toast.LENGTH_SHORT)
                         .show()
                 }
+                progress.visibility = View.GONE
             }
         }
     }

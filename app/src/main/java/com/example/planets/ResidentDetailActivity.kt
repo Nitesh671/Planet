@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -45,32 +46,37 @@ class ResidentDetailActivity : ComponentActivity() {
 
     private var homeworld = ""
 
+    private lateinit var progress: ProgressBar
+
     private val planetViewModel: PlanetViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ResidentDetailsActivityBinding.inflate(layoutInflater)
         setContentView(R.layout.resident_details_activity)
 
+        progress = findViewById(R.id.pbProgress)
+        progress.visibility = View.VISIBLE
+
         residentDetails = findViewById(R.id.resident_details)
         residentPlanet = findViewById(R.id.resident_planet)
 
         rvFilm = findViewById(R.id.rv_film_list)
-        filmAdapter = ResidentAdapter()
+        filmAdapter = ResidentAdapter(this)
         filmHeader = findViewById(R.id.film_header)
         filmSubHeader = findViewById(R.id.film_info)
 
         rvSpecies = findViewById(R.id.rv_species_list)
-        speciesAdapter = ResidentAdapter()
+        speciesAdapter = ResidentAdapter(this)
         speciesHeader = findViewById(R.id.species_header)
         speciesSubHeader = findViewById(R.id.species_info)
 
         rvVehicles = findViewById(R.id.rv_vehicles_list)
-        vehiclesAdapter = ResidentAdapter()
+        vehiclesAdapter = ResidentAdapter(this)
         vehiclesHeader = findViewById(R.id.vehicles_header)
         vehiclesSubHeader = findViewById(R.id.vehicles_info)
 
         rvStarship = findViewById(R.id.rv_starships_list)
-        starshipAdapter = ResidentAdapter()
+        starshipAdapter = ResidentAdapter(this)
         starshipHeader = findViewById(R.id.starships_header)
         starshipSubHeader = findViewById(R.id.starships_info)
 
@@ -172,6 +178,7 @@ class ResidentDetailActivity : ComponentActivity() {
                     Toast.makeText(this@ResidentDetailActivity, "API error", Toast.LENGTH_SHORT)
                         .show()
                 }
+                progress.visibility = View.GONE
             }
         }
     }

@@ -1,4 +1,8 @@
+package com.example.planets.data
+
 import com.example.planets.model.Film
+import com.example.planets.model.Planet
+import com.example.planets.model.PlanetResponse
 import com.example.planets.model.Resident
 import com.example.planets.model.Species
 import com.example.planets.model.Starship

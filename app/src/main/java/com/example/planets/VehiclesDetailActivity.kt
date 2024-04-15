@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -24,12 +25,14 @@ class VehiclesDetailActivity : ComponentActivity() {
     private lateinit var residentHeader: TextView
     private lateinit var residentSubHeader: TextView
     private lateinit var residentAdapter: ResidentAdapter
-    lateinit var rvResident: RecyclerView
+    private lateinit var rvResident: RecyclerView
 
     private lateinit var filmHeader: TextView
     private lateinit var filmSubHeader: TextView
     private lateinit var filmAdapter: ResidentAdapter
-    lateinit var rvFilm: RecyclerView
+    private lateinit var rvFilm: RecyclerView
+
+    private lateinit var progress: ProgressBar
 
     private val planetViewModel: PlanetViewModel by viewModels()
 
@@ -38,16 +41,19 @@ class VehiclesDetailActivity : ComponentActivity() {
         viewBinding = VehicleDetailActivityBinding.inflate(layoutInflater)
         setContentView(R.layout.vehicle_detail_activity)
 
+        progress = findViewById(R.id.pbProgress)
+        progress.visibility = View.VISIBLE
+
         vehicleHeader = findViewById(R.id.vehicleHeader)
         vehicleDetails = findViewById(R.id.vehicle_details)
 
         rvResident = findViewById(R.id.rv_character_list)
-        residentAdapter = ResidentAdapter()
+        residentAdapter = ResidentAdapter(this)
         residentHeader = findViewById(R.id.character_header)
         residentSubHeader = findViewById(R.id.character_info)
 
         rvFilm = findViewById(R.id.rv_film_list)
-        filmAdapter = ResidentAdapter()
+        filmAdapter = ResidentAdapter(this)
         filmHeader = findViewById(R.id.film_header)
         filmSubHeader = findViewById(R.id.film_info)
 
@@ -115,6 +121,7 @@ class VehiclesDetailActivity : ComponentActivity() {
                     Toast.makeText(this@VehiclesDetailActivity, "API error", Toast.LENGTH_SHORT)
                         .show()
                 }
+                progress.visibility = View.GONE
             }
         }
     }

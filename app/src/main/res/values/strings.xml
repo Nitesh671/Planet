@@ -27,5 +27,11 @@
     <string name="pilots">Pilots:</string>
     <string name="people">People:</string>
     <string name="homeworld">Homeworld: %s (click to see details)</string>
+    <string name="resident">Resident %s</string>
+    <string name="film">Film %s</string>
+    <string name="specie">Specie %s</string>
+    <string name="vehicle">Vehicle %s</string>
+    <string name="starship">Starship %s</string>
+    <string name="planet">Planet %s</string>
 
 </resources>
