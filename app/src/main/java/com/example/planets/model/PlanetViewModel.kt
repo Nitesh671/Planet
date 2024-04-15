@@ -113,4 +113,46 @@ class PlanetViewModel(application: Application): AndroidViewModel(application = 
             }
         }
     }
+
+    fun getLocalPlanetsData(planets: PlanetResponse?) {
+        if(planets!=null) {
+            _planetLiveData.value = planets
+        }
+    }
+
+    fun getLocalFilmData(film: Film?) {
+        if(film!=null) {
+            _filmData.value = film
+        }
+    }
+
+    fun getLocalPlanetData(planets: Planet?) {
+        if(planets!=null) {
+            _planetData.value = planets
+        }
+    }
+
+    fun getLocalResidentData(resident: Resident?) {
+        if(resident!=null) {
+            _residentData.value = resident
+        }
+    }
+
+    fun getLocalSpeciesData(species: Species?) {
+        if(species!=null) {
+            _speciesData.value = species
+        }
+    }
+
+    fun getLocalStarshipData(starship: Starship?) {
+        if(starship!=null) {
+            _starshipData.value = starship
+        }
+    }
+
+    fun getLocalVehicleData(vehicle: Vehicle?) {
+        if(vehicle!=null) {
+            _vehicleData.value = vehicle
+        }
+    }
 }

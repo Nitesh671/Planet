@@ -3,6 +3,7 @@ package com.example.planets
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -14,8 +15,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.planets.Pref.set
 import com.example.planets.databinding.VehicleDetailActivityBinding
 import com.example.planets.model.PlanetViewModel
+import com.example.planets.model.Species
+import com.example.planets.model.Starship
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class StarshipDetailActivity : ComponentActivity() {
     private lateinit var viewBinding: VehicleDetailActivityBinding
@@ -35,6 +41,9 @@ class StarshipDetailActivity : ComponentActivity() {
     private lateinit var progress: ProgressBar
 
     private val planetViewModel: PlanetViewModel by viewModels()
+
+    private lateinit var prefs: SharedPreferences
+    private var starshipId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,11 +66,11 @@ class StarshipDetailActivity : ComponentActivity() {
         filmHeader = findViewById(R.id.film_header)
         filmSubHeader = findViewById(R.id.film_info)
 
-        var starshipId = intent.getStringExtra(PlanetDetailsActivity.ID)
-        starshipId = starshipId?.substringAfterLast("starships/")
+        starshipId =
+            intent.getStringExtra(PlanetDetailsActivity.ID)?.substringAfterLast("starships/")
 
         if (starshipId != null) {
-            planetViewModel.fetchStarship(starshipId)
+            planetViewModel.fetchStarship(starshipId!!)
         }
 
         rvResident.layoutManager = LinearLayoutManager(this@StarshipDetailActivity)
@@ -69,6 +78,8 @@ class StarshipDetailActivity : ComponentActivity() {
 
         rvFilm.layoutManager = LinearLayoutManager(this@StarshipDetailActivity)
         rvFilm.adapter = filmAdapter
+
+        prefs = Pref.defaultPrefs(this)
     }
 
     override fun onResume() {
@@ -82,6 +93,7 @@ class StarshipDetailActivity : ComponentActivity() {
         planetViewModel.apply {
             starshipData.observe(this@StarshipDetailActivity) { data ->
                 if (data != null) {
+                    saveStarship(data)
                     val html = "<p>Name: ${data.name}</p>" +
                             "<p>Model: ${data.model}</p>" +
                             "<p>Manufacturer: ${data.manufacturer}</p>" +
@@ -120,6 +132,7 @@ class StarshipDetailActivity : ComponentActivity() {
                         filmAdapter.updateList(data.films)
                     }
                 } else {
+                    getLocalStarshipData(getStarship())
                     Toast.makeText(this@StarshipDetailActivity, "API error", Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -144,5 +157,25 @@ class StarshipDetailActivity : ComponentActivity() {
                 startActivity(intent)
             }
         })
+    }
+
+    private fun saveStarship(starship: Starship) {
+        val gson = Gson()
+
+        val storedHashMapString = prefs.getString("starship", null)
+        val type = object : TypeToken<HashMap<String?, Starship?>?>() {}.type
+        val hashMap = gson.fromJson<HashMap<String, Starship>>(storedHashMapString, type)
+
+        hashMap[starshipId.toString()] = starship
+        val starshipString = gson.toJson(hashMap)
+        prefs.set("starship", starshipString)
+    }
+
+    private fun getStarship(): Starship? {
+        val gson = Gson()
+        val storedHashMapString = prefs.getString("starship", null)
+        val type = object : TypeToken<HashMap<String?, Starship?>?>() {}.type
+        val starship = gson.fromJson<HashMap<String, Starship>>(storedHashMapString, type)
+        return starship.get(starshipId.toString())
     }
 }

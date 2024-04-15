@@ -3,6 +3,7 @@ package com.example.planets
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -14,8 +15,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.planets.Pref.set
 import com.example.planets.databinding.PlanetDetailsActivityBinding
+import com.example.planets.model.Planet
 import com.example.planets.model.PlanetViewModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class PlanetDetailsActivity : ComponentActivity() {
     private lateinit var viewBinding: PlanetDetailsActivityBinding
@@ -34,6 +39,8 @@ class PlanetDetailsActivity : ComponentActivity() {
     private lateinit var rvFilm: RecyclerView
 
     private lateinit var progress: ProgressBar
+    private lateinit var prefs: SharedPreferences
+    var url: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +62,7 @@ class PlanetDetailsActivity : ComponentActivity() {
         filmHeader = findViewById(R.id.film_header)
         filmSubHeader = findViewById(R.id.film_info)
 
-        var url = intent.getStringExtra(ID)
-        url = url?.substringAfterLast("planets/")
+        url = intent.getStringExtra(ID)?.substringAfterLast("planets/")
 
         rvResident.layoutManager = LinearLayoutManager(this@PlanetDetailsActivity)
         rvResident.adapter = residentAdapter
@@ -65,8 +71,9 @@ class PlanetDetailsActivity : ComponentActivity() {
         rvFilm.adapter = filmAdapter
 
         if (url != null) {
-            planetViewModel.getPlanetData(url)
+            planetViewModel.getPlanetData(url!!)
         }
+        prefs = Pref.defaultPrefs(this)
     }
 
     override fun onResume() {
@@ -79,6 +86,7 @@ class PlanetDetailsActivity : ComponentActivity() {
         planetViewModel.apply {
             planetDate.observe(this@PlanetDetailsActivity) { data ->
                 if (data != null) {
+                    savePlanet(data)
                     name.text = data.name
                     val html = "<p>Rotation Period:  ${data.rotation_period}</p>" +
                             "<p>Orbital Period: ${data.orbital_period}</p>" +
@@ -115,6 +123,7 @@ class PlanetDetailsActivity : ComponentActivity() {
                         filmAdapter.updateList(data.films)
                     }
                 } else {
+                    getLocalPlanetData(getPlanet())
                     Toast.makeText(this@PlanetDetailsActivity, "API error", Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -139,6 +148,27 @@ class PlanetDetailsActivity : ComponentActivity() {
                 startActivity(intent)
             }
         })
+    }
+
+    private fun savePlanet(planet: Planet) {
+        val gson = Gson()
+
+        val storedHashMapString = prefs.getString("planet", null)
+        val type = object : TypeToken<HashMap<String?, Planet?>?>() {}.type
+        val planets = gson.fromJson<HashMap<String, Planet>>(storedHashMapString, type)
+
+        planets[url.toString()] = planet
+
+        val planetString = gson.toJson(planets)
+        prefs.set("planet", planetString)
+    }
+
+    private fun getPlanet(): Planet? {
+        val gson = Gson()
+        val storedHashMapString = prefs.getString("planet", null)
+        val type = object : TypeToken<HashMap<String?, Planet?>?>() {}.type
+        val planets = gson.fromJson<HashMap<String, Planet>>(storedHashMapString, type)
+        return planets?.get(url.toString())
     }
 
     companion object {

@@ -3,6 +3,7 @@ package com.example.planets
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -15,8 +16,14 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.planets.PlanetDetailsActivity.Companion.ID
+import com.example.planets.Pref.set
 import com.example.planets.databinding.ResidentDetailsActivityBinding
+import com.example.planets.model.Film
+import com.example.planets.model.Planet
 import com.example.planets.model.PlanetViewModel
+import com.example.planets.model.Resident
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class ResidentDetailActivity : ComponentActivity() {
 
@@ -47,6 +54,8 @@ class ResidentDetailActivity : ComponentActivity() {
     private var homeworld = ""
 
     private lateinit var progress: ProgressBar
+    private lateinit var prefs: SharedPreferences
+    private var residentId: String? = null
 
     private val planetViewModel: PlanetViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,11 +89,10 @@ class ResidentDetailActivity : ComponentActivity() {
         starshipHeader = findViewById(R.id.starships_header)
         starshipSubHeader = findViewById(R.id.starships_info)
 
-        var residentId = intent.getStringExtra(ID)
-        residentId = residentId?.substringAfterLast("people/")
+        residentId = intent.getStringExtra(ID)?.substringAfterLast("people/")
 
         if (residentId != null) {
-            planetViewModel.fetchResident(residentId)
+            planetViewModel.fetchResident(residentId!!)
         }
 
         rvFilm.layoutManager = LinearLayoutManager(this@ResidentDetailActivity)
@@ -98,6 +106,8 @@ class ResidentDetailActivity : ComponentActivity() {
 
         rvStarship.layoutManager = LinearLayoutManager(this@ResidentDetailActivity)
         rvStarship.adapter = starshipAdapter
+
+        prefs = Pref.defaultPrefs(this)
     }
 
     override fun onResume() {
@@ -110,6 +120,7 @@ class ResidentDetailActivity : ComponentActivity() {
         planetViewModel.apply {
             residentData.observe(this@ResidentDetailActivity) { data ->
                 if (data != null) {
+                    saveResident(data)
                     val html = "<p>Name: ${data.name}</p>" +
                             "<p>Height: ${data.height}</p>" +
                             "<p>Mass: ${data.mass}</p>" +
@@ -175,6 +186,7 @@ class ResidentDetailActivity : ComponentActivity() {
                         starshipAdapter.updateList(data.starships)
                     }
                 } else {
+                    getLocalResidentData(getResident())
                     Toast.makeText(this@ResidentDetailActivity, "API error", Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -207,5 +219,25 @@ class ResidentDetailActivity : ComponentActivity() {
                 startActivity(intent)
             }
         })
+    }
+
+    private fun saveResident(resident: Resident) {
+        val gson = Gson()
+
+        val storedHashMapString = prefs.getString("resident", null)
+        val type = object : TypeToken<HashMap<String?, Resident?>?>() {}.type
+        val hashMap = gson.fromJson<HashMap<String, Resident>>(storedHashMapString, type)
+
+        hashMap[residentId.toString()] = resident
+        val residentString = gson.toJson(hashMap)
+        prefs.set("resident", residentString)
+    }
+
+    private fun getResident(): Resident? {
+        val gson = Gson()
+        val storedHashMapString = prefs.getString("resident", null)
+        val type = object : TypeToken<HashMap<String?, Resident?>?>() {}.type
+        val resident = gson.fromJson<HashMap<String, Resident>>(storedHashMapString, type)
+        return resident.get(residentId.toString())
     }
 }

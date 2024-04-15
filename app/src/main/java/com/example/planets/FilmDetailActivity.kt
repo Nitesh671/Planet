@@ -3,6 +3,7 @@ package com.example.planets
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -15,8 +16,13 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.planets.PlanetDetailsActivity.Companion.ID
+import com.example.planets.Pref.set
 import com.example.planets.databinding.FilmDetailActivityBinding
+import com.example.planets.model.Film
+import com.example.planets.model.Planet
 import com.example.planets.model.PlanetViewModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class FilmDetailActivity : ComponentActivity() {
     private lateinit var viewBinding: FilmDetailActivityBinding
@@ -48,6 +54,8 @@ class FilmDetailActivity : ComponentActivity() {
     private lateinit var rvSpecies: RecyclerView
 
     private lateinit var progress: ProgressBar
+    private lateinit var prefs: SharedPreferences
+    private var filmID :String? = null
 
     private val planetViewModel: PlanetViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,11 +93,10 @@ class FilmDetailActivity : ComponentActivity() {
         speciesHeader = findViewById(R.id.species_header)
         speciesSubHeader = findViewById(R.id.species_info)
 
-        var filmID = intent.getStringExtra(ID)
-        filmID = filmID?.substringAfterLast("films/")
+        filmID = intent.getStringExtra(ID)?.substringAfterLast("films/")
 
         if (filmID != null) {
-            planetViewModel.fetchFilm(filmID)
+            filmID?.let { planetViewModel.fetchFilm(it) }
         }
 
         rvResident.layoutManager = LinearLayoutManager(this@FilmDetailActivity)
@@ -106,6 +113,8 @@ class FilmDetailActivity : ComponentActivity() {
 
         rvSpecies.layoutManager = LinearLayoutManager(this@FilmDetailActivity)
         rvSpecies.adapter = speciesAdapter
+
+        prefs = Pref.defaultPrefs(this)
     }
 
     override fun onResume() {
@@ -118,6 +127,7 @@ class FilmDetailActivity : ComponentActivity() {
         planetViewModel.apply {
             filmData.observe(this@FilmDetailActivity) { data ->
                 if (data != null) {
+                    saveFilm(data)
                     val html = "<p>Title: ${data.title}</p>" +
                             "<p>Episode ID: ${data.episodeId}</p>" +
                             "<p>Opening Crawl: ${data.openingCrawl}</p>" +
@@ -182,6 +192,7 @@ class FilmDetailActivity : ComponentActivity() {
                         speciesAdapter.updateList(data.species)
                     }
                 } else {
+                    getLocalFilmData(getFilm())
                     Toast.makeText(this@FilmDetailActivity, "API error", Toast.LENGTH_SHORT).show()
                 }
                 progress.visibility = View.GONE
@@ -208,5 +219,25 @@ class FilmDetailActivity : ComponentActivity() {
                 startActivity(intent)
             }
         })
+    }
+
+    private fun saveFilm(film: Film) {
+        val gson = Gson()
+
+        val storedHashMapString = prefs.getString("film", null)
+        val type = object : TypeToken<HashMap<String?, Planet?>?>() {}.type
+        val films = gson.fromJson<HashMap<String, Film>>(storedHashMapString, type)
+        films[filmID.toString()] = film
+
+        val filmString = gson.toJson(films)
+        prefs.set("film", filmString)
+    }
+
+    private fun getFilm(): Film? {
+        val gson = Gson()
+        val storedHashMapString = prefs.getString("film", null)
+        val type = object : TypeToken<HashMap<String?, Film?>?>() {}.type
+        val planets = gson.fromJson<HashMap<String, Film>>(storedHashMapString, type)
+        return planets.get(filmID.toString())
     }
 }

@@ -1,6 +1,7 @@
 package com.example.planets
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,9 +13,15 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.planets.PlanetDetailsActivity.Companion.ID
+import com.example.planets.Pref.set
 import com.example.planets.databinding.MainActivityBinding
 import com.example.planets.model.Planet
+import com.example.planets.model.PlanetResponse
 import com.example.planets.model.PlanetViewModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlin.collections.HashMap
+import kotlin.collections.set
 
 class MainActivity : ComponentActivity() {
     private lateinit var planetAdapter: PlanetListAdapter
@@ -24,6 +31,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var nextButton: Button
     private lateinit var previousButton: Button
     private lateinit var progress: ProgressBar
+
+    private lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +47,7 @@ class MainActivity : ComponentActivity() {
         recyclerview.layoutManager = LinearLayoutManager(this@MainActivity)
         recyclerview.adapter = planetAdapter
         planetViewModel.fetchPlanets()
+        prefs = Pref.defaultPrefs(this)
     }
 
     override fun onResume() {
@@ -50,6 +60,7 @@ class MainActivity : ComponentActivity() {
         planetViewModel.apply {
             planetLiveDate.observe(this@MainActivity) { data ->
                 if (data != null) {
+                    savePlanets(data)
                     if (data.previous.isNullOrEmpty()) {
                         previousButton.setEnabled(false)
                         previousButton.visibility = View.GONE
@@ -80,6 +91,7 @@ class MainActivity : ComponentActivity() {
 
                     planetAdapter.updateList(data.results)
                 } else {
+                    getLocalPlanetsData(getPlanets())
                     Toast.makeText(this@MainActivity, "API error", Toast.LENGTH_SHORT).show()
                 }
                 progress.visibility = View.GONE
@@ -97,5 +109,21 @@ class MainActivity : ComponentActivity() {
                 startActivity(intent)
             }
         })
+    }
+
+    private fun savePlanets(planets: PlanetResponse) {
+        val hashMap = HashMap<String, PlanetResponse>()
+        hashMap["key1"] = planets
+        val gson = Gson()
+        val planetString = gson.toJson(hashMap)
+        prefs.set("planets", planetString)
+    }
+
+    private fun getPlanets(): PlanetResponse? {
+        val gson = Gson()
+        val storedHashMapString = prefs.getString("planets", null)
+        val type = object : TypeToken<HashMap<String?, PlanetResponse?>?>() {}.type
+        val planets = gson.fromJson<HashMap<String, PlanetResponse>>(storedHashMapString, type)
+        return planets.get("key1")
     }
 }
