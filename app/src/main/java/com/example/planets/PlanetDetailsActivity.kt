@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -124,7 +123,7 @@ class PlanetDetailsActivity : ComponentActivity() {
                     }
                 } else {
                     getLocalPlanetData(getPlanet())
-                    Toast.makeText(this@PlanetDetailsActivity, "API error", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@PlanetDetailsActivity, getString(R.string.connection_issue), Toast.LENGTH_SHORT)
                         .show()
                 }
                 progress.visibility = View.GONE
@@ -141,7 +140,6 @@ class PlanetDetailsActivity : ComponentActivity() {
         adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {
-                Log.i("Nitesh adapter", "$position")
                 val intent =
                     Intent(context, activity::class.java)
                 intent.putExtra(ID, data)
@@ -153,19 +151,19 @@ class PlanetDetailsActivity : ComponentActivity() {
     private fun savePlanet(planet: Planet) {
         val gson = Gson()
 
-        val storedHashMapString = prefs.getString("planet", null)
+        val storedHashMapString = prefs.getString(PLANET, null)
         val type = object : TypeToken<HashMap<String?, Planet?>?>() {}.type
         val planets = gson.fromJson<HashMap<String, Planet>>(storedHashMapString, type)
 
         planets[url.toString()] = planet
 
         val planetString = gson.toJson(planets)
-        prefs.set("planet", planetString)
+        prefs.set(PLANET, planetString)
     }
 
     private fun getPlanet(): Planet? {
         val gson = Gson()
-        val storedHashMapString = prefs.getString("planet", null)
+        val storedHashMapString = prefs.getString(PLANET, null)
         val type = object : TypeToken<HashMap<String?, Planet?>?>() {}.type
         val planets = gson.fromJson<HashMap<String, Planet>>(storedHashMapString, type)
         return planets?.get(url.toString())
@@ -173,5 +171,13 @@ class PlanetDetailsActivity : ComponentActivity() {
 
     companion object {
         const val ID = "id"
+        const val RESIDENT = "resident"
+        const val PLANET = "planet"
+        const val PLANETS = "planets"
+        const val FILM = "film"
+        const val SPECIES = "species"
+        const val STARSHIP = "starship"
+        const val VEHICLE = "vehicle"
+
     }
 }

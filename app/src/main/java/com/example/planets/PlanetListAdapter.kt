@@ -1,6 +1,5 @@
 package com.example.planets
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +22,6 @@ class PlanetListAdapter() : RecyclerView.Adapter<PlanetListAdapter.ViewHolder>()
 
         fun bind(planet: Planet) {
             name.text = planet.name
-            Log.i("Nitesh", "bind: ${planet.name}")
         }
     }
 
@@ -34,7 +32,6 @@ class PlanetListAdapter() : RecyclerView.Adapter<PlanetListAdapter.ViewHolder>()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.i("Nitesh2", "bind: ${planetList[position].name}")
         holder.bind(planetList[position])
         holder.itemView.setOnClickListener {
             listener?.onClick(position, planetList[position])
@@ -44,10 +41,8 @@ class PlanetListAdapter() : RecyclerView.Adapter<PlanetListAdapter.ViewHolder>()
     override fun getItemCount() = planetList.size
 
     fun updateList(newList: ArrayList<Planet>) {
-        Log.i("Nitesh7", "bind: ${newList[0].name}")
         planetList.clear()
         planetList.addAll(newList)
-        Log.i("Nitesh4", "bind: ${planetList[0].name}")
         notifyDataSetChanged()
     }
 

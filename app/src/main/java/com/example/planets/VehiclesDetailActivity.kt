@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -15,10 +14,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.planets.PlanetDetailsActivity.Companion.VEHICLE
 import com.example.planets.Pref.set
 import com.example.planets.databinding.VehicleDetailActivityBinding
 import com.example.planets.model.PlanetViewModel
-import com.example.planets.model.Starship
 import com.example.planets.model.Vehicle
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -129,7 +128,7 @@ class VehiclesDetailActivity : ComponentActivity() {
                     }
                 } else {
                     getLocalVehicleData(getVehicle())
-                    Toast.makeText(this@VehiclesDetailActivity, "API error", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@VehiclesDetailActivity, getString(R.string.connection_issue), Toast.LENGTH_SHORT)
                         .show()
                 }
                 progress.visibility = View.GONE
@@ -146,7 +145,6 @@ class VehiclesDetailActivity : ComponentActivity() {
         adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {
-                Log.i("Nitesh adapter", "$position")
                 val intent =
                     Intent(context, activity::class.java)
                 intent.putExtra(PlanetDetailsActivity.ID, data)
@@ -158,18 +156,18 @@ class VehiclesDetailActivity : ComponentActivity() {
     private fun saveVehicle(vehicle: Vehicle) {
         val gson = Gson()
 
-        val storedHashMapString = prefs.getString("vehicle", null)
+        val storedHashMapString = prefs.getString(VEHICLE, null)
         val type = object : TypeToken<HashMap<String?, Vehicle?>?>() {}.type
         val hashMap = gson.fromJson<HashMap<String, Vehicle>>(storedHashMapString, type)
 
         hashMap[vehicleId.toString()] = vehicle
         val vehicleString = gson.toJson(hashMap)
-        prefs.set("vehicle", vehicleString)
+        prefs.set(VEHICLE, vehicleString)
     }
 
     private fun getVehicle(): Vehicle? {
         val gson = Gson()
-        val storedHashMapString = prefs.getString("vehicle", null)
+        val storedHashMapString = prefs.getString(VEHICLE, null)
         val type = object : TypeToken<HashMap<String?, Vehicle?>?>() {}.type
         val vehicle = gson.fromJson<HashMap<String, Vehicle>>(storedHashMapString, type)
         return vehicle.get(vehicleId.toString())

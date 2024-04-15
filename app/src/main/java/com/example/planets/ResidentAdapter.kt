@@ -1,7 +1,6 @@
 package com.example.planets
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,7 +55,6 @@ class ResidentAdapter(val context: Context) : RecyclerView.Adapter<ResidentAdapt
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.i("Nitesh2", "bind: $position")
         holder.bind(context, list[position])
         holder.itemView.setOnClickListener {
             listener?.onClick(position, list[position])

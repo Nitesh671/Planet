@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -15,10 +14,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.planets.PlanetDetailsActivity.Companion.SPECIES
 import com.example.planets.Pref.set
 import com.example.planets.databinding.VehicleDetailActivityBinding
 import com.example.planets.model.PlanetViewModel
-import com.example.planets.model.Resident
 import com.example.planets.model.Species
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -143,7 +142,7 @@ class SpeciesDetailActivity : ComponentActivity() {
                     }
                 } else {
                     getLocalSpeciesData(getSpecies())
-                    Toast.makeText(this@SpeciesDetailActivity, "API error", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@SpeciesDetailActivity, getString(R.string.connection_issue), Toast.LENGTH_SHORT)
                         .show()
                 }
                 progress.visibility = View.GONE
@@ -166,7 +165,6 @@ class SpeciesDetailActivity : ComponentActivity() {
         adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {
-                Log.i("Nitesh adapter", "$position")
                 val intent =
                     Intent(context, activity::class.java)
                 intent.putExtra(PlanetDetailsActivity.ID, data)
@@ -178,19 +176,19 @@ class SpeciesDetailActivity : ComponentActivity() {
     private fun saveSpecies(species: Species) {
         val gson = Gson()
 
-        val storedHashMapString = prefs.getString("species", null)
+        val storedHashMapString = prefs.getString(SPECIES, null)
         val type = object : TypeToken<HashMap<String?, Species?>?>() {}.type
         val hashMap = gson.fromJson<HashMap<String, Species>>(storedHashMapString, type)
 
         hashMap[speciesId.toString()] = species
 
         val speciesString = gson.toJson(hashMap)
-        prefs.set("species", speciesString)
+        prefs.set(SPECIES, speciesString)
     }
 
     private fun getSpecies(): Species? {
         val gson = Gson()
-        val storedHashMapString = prefs.getString("species", null)
+        val storedHashMapString = prefs.getString(SPECIES, null)
         val type = object : TypeToken<HashMap<String?, Species?>?>() {}.type
         val species = gson.fromJson<HashMap<String, Species>>(storedHashMapString, type)
         return species.get(speciesId.toString())

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -16,10 +15,9 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.planets.PlanetDetailsActivity.Companion.ID
+import com.example.planets.PlanetDetailsActivity.Companion.RESIDENT
 import com.example.planets.Pref.set
 import com.example.planets.databinding.ResidentDetailsActivityBinding
-import com.example.planets.model.Film
-import com.example.planets.model.Planet
 import com.example.planets.model.PlanetViewModel
 import com.example.planets.model.Resident
 import com.google.gson.Gson
@@ -187,7 +185,7 @@ class ResidentDetailActivity : ComponentActivity() {
                     }
                 } else {
                     getLocalResidentData(getResident())
-                    Toast.makeText(this@ResidentDetailActivity, "API error", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@ResidentDetailActivity, getString(R.string.connection_issue), Toast.LENGTH_SHORT)
                         .show()
                 }
                 progress.visibility = View.GONE
@@ -212,7 +210,6 @@ class ResidentDetailActivity : ComponentActivity() {
         adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {
-                Log.i("Nitesh adapter", "$position")
                 val intent =
                     Intent(context, activity::class.java)
                 intent.putExtra(ID, data)
@@ -224,18 +221,18 @@ class ResidentDetailActivity : ComponentActivity() {
     private fun saveResident(resident: Resident) {
         val gson = Gson()
 
-        val storedHashMapString = prefs.getString("resident", null)
+        val storedHashMapString = prefs.getString(RESIDENT, null)
         val type = object : TypeToken<HashMap<String?, Resident?>?>() {}.type
         val hashMap = gson.fromJson<HashMap<String, Resident>>(storedHashMapString, type)
 
         hashMap[residentId.toString()] = resident
         val residentString = gson.toJson(hashMap)
-        prefs.set("resident", residentString)
+        prefs.set(RESIDENT, residentString)
     }
 
     private fun getResident(): Resident? {
         val gson = Gson()
-        val storedHashMapString = prefs.getString("resident", null)
+        val storedHashMapString = prefs.getString(RESIDENT, null)
         val type = object : TypeToken<HashMap<String?, Resident?>?>() {}.type
         val resident = gson.fromJson<HashMap<String, Resident>>(storedHashMapString, type)
         return resident.get(residentId.toString())

@@ -3,7 +3,6 @@ package com.example.planets
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -13,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.planets.PlanetDetailsActivity.Companion.ID
+import com.example.planets.PlanetDetailsActivity.Companion.PLANETS
 import com.example.planets.Pref.set
 import com.example.planets.databinding.MainActivityBinding
 import com.example.planets.model.Planet
@@ -20,7 +20,6 @@ import com.example.planets.model.PlanetResponse
 import com.example.planets.model.PlanetViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlin.collections.HashMap
 import kotlin.collections.set
 
 class MainActivity : ComponentActivity() {
@@ -77,14 +76,10 @@ class MainActivity : ComponentActivity() {
                     }
 
                     nextButton.setOnClickListener {
-                        val ex = data.next?.substringAfterLast("=")
-                        Log.i("Nitesh next", "observer: $ex")
                         data.next?.substringAfterLast("=")
                             ?.let { it1 -> planetViewModel.changePage(it1) }
                     }
                     previousButton.setOnClickListener {
-                        val ex = data.previous?.substringAfterLast("=")
-                        Log.i("Nitesh previous", "observer: $ex")
                         data.previous?.substringAfterLast("=")
                             ?.let { it1 -> planetViewModel.changePage(it1) }
                     }
@@ -92,7 +87,7 @@ class MainActivity : ComponentActivity() {
                     planetAdapter.updateList(data.results)
                 } else {
                     getLocalPlanetsData(getPlanets())
-                    Toast.makeText(this@MainActivity, "API error", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, getString(R.string.connection_issue), Toast.LENGTH_SHORT).show()
                 }
                 progress.visibility = View.GONE
             }
@@ -103,7 +98,6 @@ class MainActivity : ComponentActivity() {
         planetAdapter.setOnClickListener(object :
             PlanetListAdapter.OnClickListener {
             override fun onClick(position: Int, data: Planet) {
-                Log.i("Nitesh adapter", "$position")
                 val intent = Intent(this@MainActivity, PlanetDetailsActivity::class.java)
                 intent.putExtra(ID, data.url)
                 startActivity(intent)
@@ -116,12 +110,12 @@ class MainActivity : ComponentActivity() {
         hashMap["key1"] = planets
         val gson = Gson()
         val planetString = gson.toJson(hashMap)
-        prefs.set("planets", planetString)
+        prefs.set(PLANETS, planetString)
     }
 
     private fun getPlanets(): PlanetResponse? {
         val gson = Gson()
-        val storedHashMapString = prefs.getString("planets", null)
+        val storedHashMapString = prefs.getString(PLANETS, null)
         val type = object : TypeToken<HashMap<String?, PlanetResponse?>?>() {}.type
         val planets = gson.fromJson<HashMap<String, PlanetResponse>>(storedHashMapString, type)
         return planets.get("key1")

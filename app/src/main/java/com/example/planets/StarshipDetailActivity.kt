@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -15,10 +14,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.planets.PlanetDetailsActivity.Companion.STARSHIP
 import com.example.planets.Pref.set
 import com.example.planets.databinding.VehicleDetailActivityBinding
 import com.example.planets.model.PlanetViewModel
-import com.example.planets.model.Species
 import com.example.planets.model.Starship
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -133,7 +132,7 @@ class StarshipDetailActivity : ComponentActivity() {
                     }
                 } else {
                     getLocalStarshipData(getStarship())
-                    Toast.makeText(this@StarshipDetailActivity, "API error", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@StarshipDetailActivity, getString(R.string.connection_issue), Toast.LENGTH_SHORT)
                         .show()
                 }
                 progress.visibility = View.GONE
@@ -150,7 +149,6 @@ class StarshipDetailActivity : ComponentActivity() {
         adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {
-                Log.i("Nitesh adapter", "$position")
                 val intent =
                     Intent(context, activity::class.java)
                 intent.putExtra(PlanetDetailsActivity.ID, data)
@@ -162,18 +160,18 @@ class StarshipDetailActivity : ComponentActivity() {
     private fun saveStarship(starship: Starship) {
         val gson = Gson()
 
-        val storedHashMapString = prefs.getString("starship", null)
+        val storedHashMapString = prefs.getString(STARSHIP, null)
         val type = object : TypeToken<HashMap<String?, Starship?>?>() {}.type
         val hashMap = gson.fromJson<HashMap<String, Starship>>(storedHashMapString, type)
 
         hashMap[starshipId.toString()] = starship
         val starshipString = gson.toJson(hashMap)
-        prefs.set("starship", starshipString)
+        prefs.set(STARSHIP, starshipString)
     }
 
     private fun getStarship(): Starship? {
         val gson = Gson()
-        val storedHashMapString = prefs.getString("starship", null)
+        val storedHashMapString = prefs.getString(STARSHIP, null)
         val type = object : TypeToken<HashMap<String?, Starship?>?>() {}.type
         val starship = gson.fromJson<HashMap<String, Starship>>(storedHashMapString, type)
         return starship.get(starshipId.toString())

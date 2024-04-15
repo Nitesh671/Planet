@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -15,6 +14,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.planets.PlanetDetailsActivity.Companion.FILM
 import com.example.planets.PlanetDetailsActivity.Companion.ID
 import com.example.planets.Pref.set
 import com.example.planets.databinding.FilmDetailActivityBinding
@@ -193,7 +193,7 @@ class FilmDetailActivity : ComponentActivity() {
                     }
                 } else {
                     getLocalFilmData(getFilm())
-                    Toast.makeText(this@FilmDetailActivity, "API error", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@FilmDetailActivity, getString(R.string.connection_issue), Toast.LENGTH_SHORT).show()
                 }
                 progress.visibility = View.GONE
             }
@@ -212,7 +212,6 @@ class FilmDetailActivity : ComponentActivity() {
         adapter.setOnClickListener(object :
             ResidentAdapter.OnClickListener {
             override fun onClick(position: Int, data: String) {
-                Log.i("Nitesh adapter", "$position")
                 val intent =
                     Intent(context, activity::class.java)
                 intent.putExtra(ID, data)
@@ -224,18 +223,18 @@ class FilmDetailActivity : ComponentActivity() {
     private fun saveFilm(film: Film) {
         val gson = Gson()
 
-        val storedHashMapString = prefs.getString("film", null)
+        val storedHashMapString = prefs.getString(FILM, null)
         val type = object : TypeToken<HashMap<String?, Planet?>?>() {}.type
         val films = gson.fromJson<HashMap<String, Film>>(storedHashMapString, type)
         films[filmID.toString()] = film
 
         val filmString = gson.toJson(films)
-        prefs.set("film", filmString)
+        prefs.set(FILM, filmString)
     }
 
     private fun getFilm(): Film? {
         val gson = Gson()
-        val storedHashMapString = prefs.getString("film", null)
+        val storedHashMapString = prefs.getString(FILM, null)
         val type = object : TypeToken<HashMap<String?, Film?>?>() {}.type
         val planets = gson.fromJson<HashMap<String, Film>>(storedHashMapString, type)
         return planets.get(filmID.toString())

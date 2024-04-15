@@ -33,5 +33,6 @@
     <string name="vehicle">Vehicle %s</string>
     <string name="starship">Starship %s</string>
     <string name="planet">Planet %s</string>
+    <string name="connection_issue">Connection Issue</string>
 
 </resources>
